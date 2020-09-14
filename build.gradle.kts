@@ -87,7 +87,7 @@ tasks {
     }
 
     register("runServer", JavaExec::class) {
-        println("Setting default environment variables for running with DittNAV docker-compose")
+        println("Setting default environment variables for running with dittnav-tidslinje-api docker-compose")
         DockerComposeDefaults.environomentVariables.forEach { (name, value) ->
             println("Setting the environment variable $name")
             environment(name, value)

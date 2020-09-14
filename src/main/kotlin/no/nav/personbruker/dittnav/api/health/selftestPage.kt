@@ -33,7 +33,7 @@ suspend fun ApplicationCall.pingDependencies(environment: Environment) = corouti
     })
     {
         head {
-            title { +"Selftest dittnav-api" }
+            title { +"Selftest dittnav-tidslinje-api" }
         }
         body {
             h1 {
@@ -42,7 +42,7 @@ suspend fun ApplicationCall.pingDependencies(environment: Environment) = corouti
             }
             table {
                 thead {
-                    tr { th { +"SELFTEST DITTNAV-API" } }
+                    tr { th { +"SELFTEST DITTNAV-TIDSLINJE-API" } }
                 }
                 tbody {
                     services.map {
