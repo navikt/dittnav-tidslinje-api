@@ -1,0 +1,29 @@
+package no.nav.personbruker.dittnav.tidslinje.api.beskjed
+
+import io.ktor.client.HttpClient
+import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
+import no.nav.personbruker.dittnav.tidslinje.api.config.get
+import java.net.URL
+
+class BeskjedConsumer(
+        private val client: HttpClient,
+        private val eventHandlerBaseURL: URL,
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/beskjed")
+) {
+
+    suspend fun getExternalActiveEvents(innloggetBruker: InnloggetBruker): List<Beskjed> {
+        val completePathToEndpoint = URL("$pathToEndpoint/aktive")
+        val externalActiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint)
+        return externalActiveEvents
+    }
+
+    suspend fun getExternalInactiveEvents(innloggetBruker: InnloggetBruker): List<Beskjed> {
+        val completePathToEndpoint = URL("$pathToEndpoint/inaktive")
+        val externalInactiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint)
+        return externalInactiveEvents
+    }
+
+    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, completePathToEndpoint: URL): List<Beskjed> {
+        return client.get(completePathToEndpoint, innloggetBruker)
+    }
+}
