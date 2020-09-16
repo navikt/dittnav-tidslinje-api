@@ -1,4 +1,4 @@
-package no.nav.personbruker.dittnav.tidslinje.api.common
+package no.nav.personbruker.dittnav.tidslinje.api.common.exception
 
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode

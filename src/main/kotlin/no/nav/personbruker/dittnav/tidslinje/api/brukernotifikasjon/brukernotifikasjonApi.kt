@@ -5,7 +5,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
-import no.nav.personbruker.dittnav.tidslinje.api.common.respondWithError
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.respondWithError
 import no.nav.personbruker.dittnav.tidslinje.api.config.innloggetBruker
 import org.slf4j.LoggerFactory
 

@@ -1,4 +1,4 @@
-package no.nav.personbruker.dittnav.tidslinje.api.common
+package no.nav.personbruker.dittnav.tidslinje.api.common.exception
 
 import java.lang.Exception
 

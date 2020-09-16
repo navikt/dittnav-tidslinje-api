@@ -14,9 +14,6 @@ import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.PipelineContext
 import io.prometheus.client.hotspot.DefaultExports
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.beskjed
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonService
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.brukernotifikasjoner
@@ -34,6 +31,9 @@ import no.nav.personbruker.dittnav.tidslinje.api.legacy.legacyApi
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveService
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.oppgave
+import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringConsumer
+import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringService
+import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.statusoppdatering
 import no.nav.security.token.support.ktor.tokenValidationSupport
 
 @KtorExperimentalAPI
@@ -46,14 +46,14 @@ fun Application.mainModule() {
 
     val legacyConsumer = LegacyConsumer(httpClient, environment.legacyApiURL)
     val oppgaveConsumer = OppgaveConsumer(httpClient, environment.eventHandlerURL)
-    val beskjedConsumer = BeskjedConsumer(httpClient, environment.eventHandlerURL)
+    val statusoppdateringConsumer = StatusoppdateringConsumer(httpClient, environment.eventHandlerURL)
     val innboksConsumer = InnboksConsumer(httpClient, environment.eventHandlerURL)
     val brukernotifikasjonConsumer = BrukernotifikasjonConsumer(httpClient, environment.eventHandlerURL)
 
     val doneProducer = DoneProducer(httpClient, environment.eventHandlerURL)
 
     val oppgaveService = OppgaveService(oppgaveConsumer)
-    val beskjedService = BeskjedService(beskjedConsumer)
+    val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     val innboksService = InnboksService(innboksConsumer)
     val brukernotifikasjonService = BrukernotifikasjonService(brukernotifikasjonConsumer)
 
@@ -82,7 +82,7 @@ fun Application.mainModule() {
         authenticate {
             legacyApi(legacyConsumer)
             oppgave(oppgaveService)
-            beskjed(beskjedService)
+            statusoppdatering(statusoppdateringService)
             innboks(innboksService)
             brukernotifikasjoner(brukernotifikasjonService)
             authenticationCheck()

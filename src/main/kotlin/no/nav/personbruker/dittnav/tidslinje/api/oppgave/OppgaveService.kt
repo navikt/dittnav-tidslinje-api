@@ -1,6 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
-import no.nav.personbruker.dittnav.tidslinje.api.common.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 
 class OppgaveService(private val oppgaveConsumer: OppgaveConsumer) {

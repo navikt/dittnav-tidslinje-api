@@ -3,7 +3,7 @@ package no.nav.personbruker.dittnav.tidslinje.api.innboks
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import no.nav.personbruker.dittnav.tidslinje.api.common.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should throw`

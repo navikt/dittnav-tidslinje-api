@@ -1,32 +1,31 @@
-package no.nav.personbruker.dittnav.tidslinje.api.beskjed
+package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
 import java.time.ZonedDateTime
 
-data class Beskjed(
-        val uid: String,
+data class Statusoppdatering(
+        val produsent: String?,
+        val eventId: String,
         val eventTidspunkt: ZonedDateTime,
         val fodselsnummer: String,
-        val eventId: String,
         val grupperingsId: String,
-        val tekst: String,
         val link: String,
-        val produsent: String?,
         val sikkerhetsnivaa: Int,
         val sistOppdatert: ZonedDateTime,
-        val aktiv: Boolean
+        val statusGlobal: String,
+        val statusIntern: String?,
+        val sakstema: String
 ) {
     override fun toString(): String {
-        return "Beskjed(" +
-                "uid=$uid, " +
+        return "Statusoppdatering(" +
+                "eventId=$eventId, " +
                 "eventTidspunkt=$eventTidspunkt, " +
                 "fodselsnummer=***, " +
-                "eventId=$eventId, " +
                 "grupperingsId=$grupperingsId, " +
-                "tekst=***, " +
                 "link=***, " +
-                "produsent=$produsent, " +
                 "sikkerhetsnivaa=$sikkerhetsnivaa, " +
                 "sistOppdatert=$sistOppdatert, " +
-                "aktiv=$aktiv"
+                "statusGlobal=$statusGlobal, " +
+                "statusIntern=$statusIntern, " +
+                "sakstema=$sakstema, "
     }
 }

@@ -1,6 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon
 
-import no.nav.personbruker.dittnav.tidslinje.api.common.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 
 class BrukernotifikasjonService(private val brukernotifikasjonConsumer: BrukernotifikasjonConsumer) {

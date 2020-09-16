@@ -1,20 +1,20 @@
-package no.nav.personbruker.dittnav.tidslinje.api.beskjed
+package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-fun createBeskjed(eventId: String, fodselsnummer: String, uid: String, aktiv: Boolean): Beskjed {
-    return Beskjed(
-            uid = uid,
+fun createStatusoppdatering(eventId: String, fodselsnummer: String): Statusoppdatering {
+    return Statusoppdatering(
             eventTidspunkt = ZonedDateTime.now(ZoneId.of("Europe/Oslo")),
             fodselsnummer = fodselsnummer,
             eventId = eventId,
             grupperingsId = "Dok123",
-            tekst = "Dette er beskjed til brukeren",
             link = "https://nav.no/systemX/",
             produsent = "dittnav",
             sikkerhetsnivaa = 4,
             sistOppdatert = ZonedDateTime.now(ZoneId.of("Europe/Oslo")),
-            aktiv = aktiv
+            statusGlobal = "Dummy global status",
+            statusIntern = "Dummy intern status",
+            sakstema = "Dummy sakstema"
     )
 }
