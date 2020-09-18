@@ -26,6 +26,29 @@ class StatusoppdateringConsumerTest {
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
 
     @Test
+    fun `should call information endpoint on event handler`() {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler { request ->
+                    if (request.url.encodedPath.contains("/fetch/Statusoppdatering") && request.url.host.contains("event-handler")) {
+                        respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
+                    } else {
+                        respondError(HttpStatusCode.BadRequest)
+                    }
+                }
+            }
+            install(JsonFeature) {
+                serializer = buildJsonSerializer()
+            }
+        }
+        val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
+
+        runBlocking {
+            StatusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav") `should equal` emptyList()
+        }
+    }
+
+    @Test
     fun `should get list of Statusoppdatering`() {
         val StatusoppdateringObject = createStatusoppdatering("1", "1")
         val objectMapper = ObjectMapper().apply {
@@ -41,10 +64,11 @@ class StatusoppdateringConsumerTest {
         val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalActiveEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker)
+            val externalActiveEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker, "dummyGrupperingsId", "dummyProdusent")
             val event = externalActiveEvents.first()
             externalActiveEvents.size `should be equal to` 1
             event.statusGlobal `should be equal to` StatusoppdateringObject.statusGlobal
+            event.statusIntern!! `should be equal to` StatusoppdateringObject.statusIntern!!
             event.sakstema `should be equal to` StatusoppdateringObject.sakstema
             event.fodselsnummer `should be equal to` StatusoppdateringObject.fodselsnummer
         }

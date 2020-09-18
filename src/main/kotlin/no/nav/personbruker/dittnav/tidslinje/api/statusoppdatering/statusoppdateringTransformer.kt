@@ -19,6 +19,6 @@ fun toStatusoppdateringDTO(statusoppdatering: Statusoppdatering): Statusoppdater
 
 fun toMaskedStatusoppdateringDTO(statusoppdatering: Statusoppdatering): StatusoppdateringDTO =
         statusoppdatering.let {
-            var maskedStatusoppdateringDTO = toStatusoppdateringDTO(statusoppdatering)
+            val maskedStatusoppdateringDTO = toStatusoppdateringDTO(statusoppdatering)
             return maskedStatusoppdateringDTO.copy(link = "***", produsent = "***", statusGlobal = "***", statusIntern = "***", sakstema = "***")
         }

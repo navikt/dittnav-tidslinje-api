@@ -1,22 +1,27 @@
 package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
-import no.nav.personbruker.dittnav.tidslinje.api.common.exception.UntransformableRecordException
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
 class StatusoppdateringService(private val statusoppdateringConsumer: StatusoppdateringConsumer) {
 
-    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker): List<StatusoppdateringDTO> {
-        val externalEvents = statusoppdateringConsumer.getExternalEvents(innloggetBruker)
-        return getStatusoppdateringEvents(innloggetBruker, externalEvents)
+    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker,
+                                           grupperingsId: String,
+                                           produsent: String): List<StatusoppdateringDTO> {
+        return getStatusoppdateringEvents(innloggetBruker) {
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
+        }
     }
 
-    private fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker, externalEvents: List<Statusoppdatering>): List<StatusoppdateringDTO> {
+    private suspend fun getStatusoppdateringEvents(
+            innloggetBruker: InnloggetBruker,
+            getEvents: suspend (InnloggetBruker) -> List<Statusoppdatering>
+    ): List<StatusoppdateringDTO> {
         return try {
-            externalEvents.map { statusoppdatering ->
-                transformToDTO(statusoppdatering, innloggetBruker)
-            }
+            val externalEvents = getEvents(innloggetBruker)
+            externalEvents.map { statusoppdatering -> transformToDTO(statusoppdatering, innloggetBruker) }
         } catch (exception: Exception) {
-            throw UntransformableRecordException("Klarte ikke transformere den eksterne typen Statusoppdatering", exception)
+            throw ConsumeEventException("Klarte ikke hente eventer av type Statusoppdatering", exception)
         }
     }
 

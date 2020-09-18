@@ -23,11 +23,11 @@ class StatusoppdateringServiceTest {
         val statusoppdatering2 = createStatusoppdatering("2", "2")
 
         coEvery {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker)
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
         } returns listOf(statusoppdatering1, statusoppdatering2)
 
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
             statusoppdateringList.size `should be equal to` 2
         }
     }
@@ -38,12 +38,13 @@ class StatusoppdateringServiceTest {
         var statusoppdatering = createStatusoppdatering("1", "1")
         statusoppdatering = statusoppdatering.copy(sikkerhetsnivaa = 4)
         innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(ident, 3)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav") } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` "***"
+            statusoppdateringDTO.statusIntern!! `should be equal to` "***"
             statusoppdateringDTO.sakstema `should be equal to` "***"
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` "***"
@@ -55,12 +56,13 @@ class StatusoppdateringServiceTest {
     fun `should not mask events with security level lower than current user`() {
         var statusoppdatering = createStatusoppdatering("1", "1")
         statusoppdatering = statusoppdatering.copy(sikkerhetsnivaa = 3)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav") } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
+            statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
             statusoppdateringDTO.sakstema `should be equal to` statusoppdatering.sakstema
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` statusoppdatering.link
@@ -71,12 +73,13 @@ class StatusoppdateringServiceTest {
     @Test
     fun `should not mask events with security level equal than current user`() {
         val statusoppdatering = createStatusoppdatering("1", "1")
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav") } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
+            statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
             statusoppdateringDTO.sakstema `should be equal to` statusoppdatering.sakstema
             statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` statusoppdatering.link
@@ -87,12 +90,12 @@ class StatusoppdateringServiceTest {
     @Test
     fun `should throw exception if fetching events fails`() {
         coEvery {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker)
-        } throws ConsumeEventException("Test error", Exception("Test error"))
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
+        } throws Exception("Test error")
 
         invoking {
             runBlocking {
-                statusoppdateringService.getStatusoppdateringEvents(innloggetBruker)
+                statusoppdateringService.getStatusoppdateringEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav")
             }
         } `should throw` ConsumeEventException::class
     }

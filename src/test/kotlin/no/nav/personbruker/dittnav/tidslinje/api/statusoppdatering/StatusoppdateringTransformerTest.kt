@@ -20,6 +20,7 @@ class StatusoppdateringTransformerTest {
         statusoppdateringDTO.sistOppdatert `should be` statusoppdatering1.sistOppdatert
         statusoppdateringDTO.sikkerhetsnivaa `should be` statusoppdatering1.sikkerhetsnivaa
         statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering1.statusGlobal
+        statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering1.statusIntern!!
         statusoppdateringDTO.sakstema `should be equal to` statusoppdatering1.sakstema
     }
 

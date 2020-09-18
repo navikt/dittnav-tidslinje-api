@@ -15,10 +15,19 @@ fun Route.statusoppdatering(statusoppdatreingService: StatusoppdateringService) 
 
     get("/statusoppdatering") {
         try {
-            val statusoppdateringEvents = statusoppdatreingService.getStatusoppdateringEvents(innloggetBruker)
+            val repeatedParameters: List<String>? = call.request.queryParameters.getAll("repeatedParam")
+            val grupperingsId = getParameterFromRequestWithIndex(1, repeatedParameters)
+            val produsent = getParameterFromRequestWithIndex(2, repeatedParameters)
+            val statusoppdateringEvents = statusoppdatreingService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, produsent)
             call.respond(HttpStatusCode.OK, statusoppdateringEvents)
-        } catch(exception: Exception) {
+        } catch (exception: Exception) {
             respondWithError(call, log, exception)
         }
     }
+}
+
+private fun getParameterFromRequestWithIndex(index: Int, parametersFromRequest: List<String>?): String {
+    var result = ""
+    parametersFromRequest?.let { parameter -> result = parameter[index] }
+    return result
 }
