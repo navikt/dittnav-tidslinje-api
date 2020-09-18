@@ -14,9 +14,6 @@ import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.PipelineContext
 import io.prometheus.client.hotspot.DefaultExports
-import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonService
-import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.brukernotifikasjoner
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerFactory
 import no.nav.personbruker.dittnav.tidslinje.api.done.DoneProducer
@@ -48,14 +45,12 @@ fun Application.mainModule() {
     val oppgaveConsumer = OppgaveConsumer(httpClient, environment.eventHandlerURL)
     val statusoppdateringConsumer = StatusoppdateringConsumer(httpClient, environment.eventHandlerURL)
     val innboksConsumer = InnboksConsumer(httpClient, environment.eventHandlerURL)
-    val brukernotifikasjonConsumer = BrukernotifikasjonConsumer(httpClient, environment.eventHandlerURL)
 
     val doneProducer = DoneProducer(httpClient, environment.eventHandlerURL)
 
     val oppgaveService = OppgaveService(oppgaveConsumer)
     val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     val innboksService = InnboksService(innboksConsumer)
-    val brukernotifikasjonService = BrukernotifikasjonService(brukernotifikasjonConsumer)
 
     install(DefaultHeaders)
 
@@ -84,7 +79,6 @@ fun Application.mainModule() {
             oppgave(oppgaveService)
             statusoppdatering(statusoppdateringService)
             innboks(innboksService)
-            brukernotifikasjoner(brukernotifikasjonService)
             authenticationCheck()
             doneApi(doneProducer)
         }
