@@ -1,22 +1,22 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: dittnav-api
-  namespace: {{namespace}}
+  name: dittnav-tidslinje-api
+  namespace: personbruker
   labels:
     team: personbruker
 spec:
   image: {{version}}
   port: 8080
   liveness:
-    path: /person/dittnav-api/internal/isAlive
+    path: /person/dittnav-tidslinje-api/internal/isAlive
     initialDelay: 10
   readiness:
-    path: /person/dittnav-api/internal/isReady
+    path: /person/dittnav-tidslinje-api/internal/isReady
     initialDelay: 10
   prometheus:
     enabled: true
-    path: /person/dittnav-api/metrics
+    path: /person/dittnav-tidslinje-api/metrics
   replicas:
     min: 2
     max: 4
