@@ -14,7 +14,15 @@ import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import java.net.URL
 
 
-suspend inline fun <reified T> HttpClient.get(url: URL,
+suspend inline fun <reified T> HttpClient.get(url: URL, innloggetBruker: InnloggetBruker): T = withContext(Dispatchers.IO) {
+    request<T> {
+        url(url)
+        method = HttpMethod.Get
+        header(HttpHeaders.Authorization, innloggetBruker.createAuthenticationHeader())
+    }
+}
+
+suspend inline fun <reified T> HttpClient.getWithParams(url: URL,
                                               innloggetBruker: InnloggetBruker,
                                               grupperingsId: String,
                                               produsent: String): T = withContext(Dispatchers.IO) {

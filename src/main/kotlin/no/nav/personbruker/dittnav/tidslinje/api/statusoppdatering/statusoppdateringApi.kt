@@ -15,9 +15,8 @@ fun Route.statusoppdatering(statusoppdatreingService: StatusoppdateringService) 
 
     get("/statusoppdatering") {
         try {
-            val repeatedParameters: List<String>? = call.request.queryParameters.getAll("repeatedParam")
-            val grupperingsId = getParameterFromRequestWithIndex(1, repeatedParameters)
-            val produsent = getParameterFromRequestWithIndex(2, repeatedParameters)
+            val grupperingsId = checkNotNull(call.request.queryParameters["grupperingsId"])
+            val produsent = checkNotNull(call.request.queryParameters["produsent"])
             val statusoppdateringEvents = statusoppdatreingService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, produsent)
             call.respond(HttpStatusCode.OK, statusoppdateringEvents)
         } catch (exception: Exception) {
@@ -26,8 +25,9 @@ fun Route.statusoppdatering(statusoppdatreingService: StatusoppdateringService) 
     }
 }
 
-private fun getParameterFromRequestWithIndex(index: Int, parametersFromRequest: List<String>?): String {
+private fun checkNotNull(parameterFromRequest: String?): String {
     var result = ""
-    parametersFromRequest?.let { parameter -> result = parameter[index] }
+    parameterFromRequest?.let { parameter -> result = parameter }
     return result
 }
+
