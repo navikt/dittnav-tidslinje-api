@@ -1,11 +1,11 @@
-# DittNAV api
+# dittnav-tidslinje-api
 
-Proxy mellom dittnav-frontend og dittnav-legacy-api/dittnav-event-handler
+Dette er backend delen til statusoppdateringer og tidslinjen.
 
 # Kom i gang
-1. Bygg dittnav-api ved å kjøre `gradle build`
+1. Bygg dittnav-tidslinje-api ved å kjøre `gradle build`
 2. Start alle appens avhengigheter ved å kjøre `docker-compose -d`
-3. Ta ned dittnav-api ved å kjøre `docker-compose kill api`
+3. Ta ned dittnav-tidslinje-api ved å kjøre `docker-compose kill api`
 4. Start appen lokalt ved å kjøre `./gradlew runServer`
 5. Appen nås på ´http://localhost:8091´
 
