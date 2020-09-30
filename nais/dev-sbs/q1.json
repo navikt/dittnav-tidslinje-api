@@ -1,9 +1,0 @@
-{
-  "namespace": "q1",
-  "ingresses": [
-    "https://www.dev.nav.no/person/dittnav-tidslinje-api",
-    "https://dittnav-tidslinje-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api",
-    "https://dittnav-tidslinje-api-q1.nais.oera-q.local/person/dittnav-tidslinje-api",
-    "https://www-q1.nav.no/person/dittnav-tidslinje-api"
-  ]
-}
