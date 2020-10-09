@@ -24,13 +24,15 @@ import java.net.URL
 class StatusoppdateringConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val grupperingsid = "Dok123"
+    val produsent = "dittnav"
 
     @Test
     fun `should call information endpoint on event handler`() {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/Statusoppdatering") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/grouped/statusoppdatering") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -44,13 +46,13 @@ class StatusoppdateringConsumerTest {
         val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            StatusoppdateringConsumer.getExternalEvents(innloggetBruker = innloggetBruker, grupperingsId = "123", produsent = "dittnav") `should equal` emptyList()
+            StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should equal` emptyList()
         }
     }
 
     @Test
     fun `should get list of Statusoppdatering`() {
-        val StatusoppdateringObject = createStatusoppdatering("1", "1")
+        val StatusoppdateringObject = createStatusoppdatering(eventId = "1", fodselsnummer = "1")
         val objectMapper = ObjectMapper().apply {
             enableDittNavJsonConfig()
         }
@@ -64,9 +66,9 @@ class StatusoppdateringConsumerTest {
         val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalActiveEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker, "dummyGrupperingsId", "dummyProdusent")
-            val event = externalActiveEvents.first()
-            externalActiveEvents.size `should be equal to` 1
+            val externalEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val event = externalEvents.first()
+            externalEvents.size `should be equal to` 1
             event.statusGlobal `should be equal to` StatusoppdateringObject.statusGlobal
             event.statusIntern!! `should be equal to` StatusoppdateringObject.statusIntern!!
             event.sakstema `should be equal to` StatusoppdateringObject.sakstema

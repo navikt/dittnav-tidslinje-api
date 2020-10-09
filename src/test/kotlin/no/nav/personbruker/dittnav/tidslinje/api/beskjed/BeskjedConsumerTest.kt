@@ -18,7 +18,6 @@ import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMot
 import no.nav.personbruker.dittnav.tidslinje.api.config.buildJsonSerializer
 import no.nav.personbruker.dittnav.tidslinje.api.config.enableDittNavJsonConfig
 import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should be false`
 import org.amshove.kluent.`should be true`
 import org.amshove.kluent.`should equal`
 import org.junit.jupiter.api.Test
@@ -27,13 +26,15 @@ import java.net.URL
 class BeskjedConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val grupperingsid = "Dok123"
+    val produsent = "dittnav"
 
     @Test
     fun `should call information endpoint on event handler`() {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/beskjed") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/grouped/beskjed") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -47,13 +48,13 @@ class BeskjedConsumerTest {
         val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            beskjedConsumer.getExternalActiveEvents(innloggetBruker) `should equal` emptyList()
+            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should equal` emptyList()
         }
     }
 
     @Test
-    fun `should get list of active Beskjed`() {
-        val beskjedObject = createBeskjed("1", "1", "1", true)
+    fun `should get list of Beskjed`() {
+        val beskjedObject = createBeskjed(eventId = "1", fodselsnummer = "1", uid = "1", aktiv = true)
         val objectMapper = ObjectMapper().apply {
             enableDittNavJsonConfig()
         }
@@ -67,38 +68,12 @@ class BeskjedConsumerTest {
         val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalActiveEvents = beskjedConsumer.getExternalActiveEvents(innloggetBruker)
-            val event = externalActiveEvents.first()
-            externalActiveEvents.size `should be equal to` 1
+            val externalEvents = beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val event = externalEvents.first()
+            externalEvents.size `should be equal to` 1
             event.tekst `should be equal to` beskjedObject.tekst
             event.fodselsnummer `should be equal to` beskjedObject.fodselsnummer
             event.aktiv.`should be true`()
-        }
-    }
-
-    @Test
-    fun `should get list of inactive Beskjed`() {
-        val beskjedObject = createBeskjed("1", "1", "1", false)
-        val objectMapper = ObjectMapper().apply {
-            enableDittNavJsonConfig()
-        }
-
-        val client = getClient {
-            respond(
-                    objectMapper.writeValueAsString(listOf(beskjedObject)),
-                    headers = headersOf(HttpHeaders.ContentType,
-                            ContentType.Application.Json.toString())
-            )
-        }
-        val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
-
-        runBlocking {
-            val externalInactiveEvents = beskjedConsumer.getExternalInactiveEvents(innloggetBruker)
-            val event = externalInactiveEvents.first()
-            externalInactiveEvents.size `should be equal to` 1
-            event.tekst `should be equal to` beskjedObject.tekst
-            event.fodselsnummer `should be equal to` beskjedObject.fodselsnummer
-            event.aktiv.`should be false`()
         }
     }
 
@@ -114,4 +89,5 @@ class BeskjedConsumerTest {
             }
         }
     }
+
 }

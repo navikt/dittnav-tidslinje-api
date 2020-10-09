@@ -5,9 +5,7 @@ import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventEx
 
 class StatusoppdateringService(private val statusoppdateringConsumer: StatusoppdateringConsumer) {
 
-    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker,
-                                           grupperingsId: String,
-                                           produsent: String): List<StatusoppdateringDTO> {
+    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<StatusoppdateringDTO> {
         return getStatusoppdateringEvents(innloggetBruker) {
             statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
         }

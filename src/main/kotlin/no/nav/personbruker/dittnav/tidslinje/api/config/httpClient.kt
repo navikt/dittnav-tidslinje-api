@@ -22,15 +22,15 @@ suspend inline fun <reified T> HttpClient.get(url: URL, innloggetBruker: Innlogg
     }
 }
 
-suspend inline fun <reified T> HttpClient.getWithParams(url: URL,
-                                              innloggetBruker: InnloggetBruker,
-                                              grupperingsId: String,
-                                              produsent: String): T = withContext(Dispatchers.IO) {
+suspend inline fun <reified T> HttpClient.getWithParameter(url: URL,
+                                                           innloggetBruker: InnloggetBruker,
+                                                           grupperingsId: String,
+                                                           produsent: String): T = withContext(Dispatchers.IO) {
     request<T> {
         url(url)
         method = HttpMethod.Get
         header(HttpHeaders.Authorization, innloggetBruker.createAuthenticationHeader())
-        parameter("grupperingsId", grupperingsId)
+        parameter("grupperingsid", grupperingsId)
         parameter("produsent", produsent)
     }
 }

@@ -1,26 +1,19 @@
 package no.nav.personbruker.dittnav.tidslinje.api.innboks
 
-import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
-class InnboksService (private val innboksConsumer: InnboksConsumer) {
+class InnboksService(private val innboksConsumer: InnboksConsumer) {
 
-    suspend fun getActiveInnboksEvents(innloggetBruker: InnloggetBruker): List<InnboksDTO> {
+    suspend fun getInnboksEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<InnboksDTO> {
         return getInnboksEvents(innloggetBruker) {
-            innboksConsumer.getExternalActiveEvents(it)
-        }
-    }
-
-    suspend fun getInactiveInnboksEvents(innloggetBruker: InnloggetBruker): List<InnboksDTO> {
-        return getInnboksEvents(innloggetBruker) {
-            innboksConsumer.getExternalInactiveEvents(it)
+            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
         }
     }
 
     private suspend fun getInnboksEvents(
             innloggetBruker: InnloggetBruker,
-            getEvents: suspend (InnloggetBruker) -> List<Innboks>
-    ): List<InnboksDTO> {
+            getEvents: suspend (InnloggetBruker) -> List<Innboks>): List<InnboksDTO> {
         return try {
             val externalEvents = getEvents(innloggetBruker)
             externalEvents.map { innboks -> transformToDTO(innboks, innloggetBruker) }
@@ -30,7 +23,7 @@ class InnboksService (private val innboksConsumer: InnboksConsumer) {
     }
 
     private fun transformToDTO(innboks: Innboks, innloggetBruker: InnloggetBruker): InnboksDTO {
-        return if(innloggetBrukerIsAllowedToViewAllDataInEvent(innboks, innloggetBruker)) {
+        return if (innloggetBrukerIsAllowedToViewAllDataInEvent(innboks, innloggetBruker)) {
             toInnboksDTO(innboks)
         } else {
             toMaskedInnboksDTO(innboks)

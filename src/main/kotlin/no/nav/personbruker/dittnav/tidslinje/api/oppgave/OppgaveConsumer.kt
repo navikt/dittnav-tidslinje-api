@@ -2,28 +2,22 @@ package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
 import io.ktor.client.HttpClient
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
-import no.nav.personbruker.dittnav.tidslinje.api.config.get
+import no.nav.personbruker.dittnav.tidslinje.api.config.getWithParameter
 import java.net.URL
 
 class OppgaveConsumer(
         private val client: HttpClient,
         private val eventHandlerBaseURL: URL,
-        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/oppgave")
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/grouped/oppgave")
 ) {
 
-    suspend fun getExternalActiveEvents(innloggetBruker: InnloggetBruker): List<Oppgave> {
-        val completePathToEndpoint = URL("$pathToEndpoint/aktive")
-        val externalActiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint)
+    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Oppgave> {
+        val completePathToEndpoint = URL("$pathToEndpoint")
+        val externalActiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint, grupperingsId, produsent)
         return externalActiveEvents
     }
 
-    suspend fun getExternalInactiveEvents(innloggetBruker: InnloggetBruker): List<Oppgave> {
-        val completePathToEndpoint = URL("$pathToEndpoint/inaktive")
-        val externalInactiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint)
-        return externalInactiveEvents
-    }
-
-    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, comletePathToEndpoint: URL): List<Oppgave> {
-        return client.get(comletePathToEndpoint, innloggetBruker)
+    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, comletePathToEndpoint: URL, grupperingsId: String, produsent: String): List<Oppgave> {
+        return client.getWithParameter(comletePathToEndpoint, innloggetBruker, grupperingsId, produsent)
     }
 }

@@ -1,19 +1,13 @@
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
-import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
+import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
 class OppgaveService(private val oppgaveConsumer: OppgaveConsumer) {
 
-    suspend fun getActiveOppgaveEvents(innloggetBruker: InnloggetBruker): List<OppgaveDTO> {
+    suspend fun getOppgaveEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<OppgaveDTO> {
         return getOppgaveEvents(innloggetBruker) {
-            oppgaveConsumer.getExternalActiveEvents(it)
-        }
-    }
-
-    suspend fun getInactiveOppgaveEvents(innloggetBruker: InnloggetBruker): List<OppgaveDTO> {
-        return getOppgaveEvents(innloggetBruker) {
-            oppgaveConsumer.getExternalInactiveEvents(it)
+            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
         }
     }
 
@@ -30,7 +24,7 @@ class OppgaveService(private val oppgaveConsumer: OppgaveConsumer) {
     }
 
     private fun transformToDTO(oppgave: Oppgave, innloggetBruker: InnloggetBruker): OppgaveDTO {
-        return if(innloggetBrukerIsAllowedToViewAllDataInEvent(oppgave, innloggetBruker)) {
+        return if (innloggetBrukerIsAllowedToViewAllDataInEvent(oppgave, innloggetBruker)) {
             toOppgaveDTO(oppgave)
         } else {
             toMaskedOppgaveDTO(oppgave)
