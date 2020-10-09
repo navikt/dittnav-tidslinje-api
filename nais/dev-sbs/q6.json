@@ -1,8 +1,0 @@
-{
-  "namespace": "q6",
-  "ingresses": [
-    "https://dittnav-tidslinje-api-q6.dev-sbs.nais.io/person/dittnav-tidslinje-api",
-    "https://dittnav-tidslinje-api-q6.nais.oera-q.local/person/dittnav-tidslinje-api",
-    "https://www-q6.nav.no/person/dittnav-tidslinje-api"
-  ]
-}
