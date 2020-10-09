@@ -18,14 +18,10 @@ import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerFactory
-import no.nav.personbruker.dittnav.tidslinje.api.done.DoneProducer
-import no.nav.personbruker.dittnav.tidslinje.api.done.doneApi
 import no.nav.personbruker.dittnav.tidslinje.api.health.authenticationCheck
 import no.nav.personbruker.dittnav.tidslinje.api.health.healthApi
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksService
-import no.nav.personbruker.dittnav.tidslinje.api.legacy.LegacyConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.legacy.legacyApi
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveService
 import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringConsumer
@@ -42,13 +38,10 @@ fun Application.mainModule() {
 
     val httpClient = HttpClientBuilder.build()
 
-    val legacyConsumer = LegacyConsumer(httpClient, environment.legacyApiURL)
     val beskjedConsumer = BeskjedConsumer(httpClient, environment.eventHandlerURL)
     val oppgaveConsumer = OppgaveConsumer(httpClient, environment.eventHandlerURL)
     val statusoppdateringConsumer = StatusoppdateringConsumer(httpClient, environment.eventHandlerURL)
     val innboksConsumer = InnboksConsumer(httpClient, environment.eventHandlerURL)
-
-    val doneProducer = DoneProducer(httpClient, environment.eventHandlerURL)
 
     val beskjedService = BeskjedService(beskjedConsumer)
     val oppgaveService = OppgaveService(oppgaveConsumer)
@@ -79,10 +72,8 @@ fun Application.mainModule() {
     routing {
         healthApi(environment)
         authenticate {
-            legacyApi(legacyConsumer)
             tidslinje(tidslinjeService)
             authenticationCheck()
-            doneApi(doneProducer)
         }
 
         configureShutdownHook(httpClient)
