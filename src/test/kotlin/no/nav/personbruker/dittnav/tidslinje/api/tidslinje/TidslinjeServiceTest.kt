@@ -3,22 +3,16 @@ package no.nav.personbruker.dittnav.tidslinje.api.tidslinje
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
-import no.nav.personbruker.dittnav.tidslinje.api.beskjed.createBeskjed
+import no.nav.personbruker.dittnav.tidslinje.api.beskjed.*
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
-import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksService
-import no.nav.personbruker.dittnav.tidslinje.api.innboks.createInnboks
-import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveService
-import no.nav.personbruker.dittnav.tidslinje.api.oppgave.createOppgave
-import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringConsumer
-import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringService
-import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.createStatusoppdatering
+import no.nav.personbruker.dittnav.tidslinje.api.innboks.*
+import no.nav.personbruker.dittnav.tidslinje.api.oppgave.*
+import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.*
 import org.amshove.kluent.*
 import org.junit.jupiter.api.Test
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class TidslinjeServiceTest {
 
@@ -62,13 +56,11 @@ class TidslinjeServiceTest {
         runBlocking {
             val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, produsent)
             tidslinjeEvents.size `should be equal to` 4
-            tidslinjeEvents.first().size `should be equal to` 1
-            tidslinjeEvents.first()[0].toString() `should contain` "BeskjedDTO"
         }
     }
 
     @Test
-    fun `should return empty list if no events match ids`() {
+    fun `should return empty list if no events match grupperingsid`() {
         val noMatchGrupperingsid = "dummyId"
 
         coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, produsent) } returns emptyList()
@@ -78,7 +70,43 @@ class TidslinjeServiceTest {
 
         runBlocking {
             val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, noMatchGrupperingsid, produsent)
-            tidslinjeEvents `should equal` listOf(emptyList(), emptyList(), emptyList(), emptyList())
+            tidslinjeEvents.`should be empty`()
         }
     }
+
+    @Test
+    fun `should return list that is sorted by EventTidspunkt`() {
+        val oneDayAgo = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).minusDays(1)
+        val twoDaysAgo = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).minusDays(2)
+        val threeDaysAgo = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).minusDays(3)
+        val fourDaysAgo = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).minusDays(4)
+
+        val innboksOneDayAgo = createInnboksWithEventTidspunkt(eventId = "3", eventTidspunkt = oneDayAgo)
+        val beskjedTwoDaysAgo = createBeskjedWithEventTidspunkt(eventId = "2", uid = "123", eventTidspunkt = twoDaysAgo)
+        val statusoppdateringThreeDaysAgo = createStatusoppdateringWithEventTidspunkt(eventId = "4", eventTidspunkt = threeDaysAgo)
+        val oppgaveFourDaysAgo = createOppgaveWithEventTidspunkt(eventId = "1", eventTidspunkt = fourDaysAgo)
+
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgaveFourDaysAgo)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjedTwoDaysAgo)
+        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(innboksOneDayAgo)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdateringThreeDaysAgo)
+
+        runBlocking {
+            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, produsent)
+            tidslinjeEvents.size `should be equal to` 4
+
+            tidslinjeEvents[0].shouldBeInstanceOf<InnboksDTO>()
+            tidslinjeEvents[0].eventTidspunkt `should be equal to` oneDayAgo
+
+            tidslinjeEvents[1].shouldBeInstanceOf<BeskjedDTO>()
+            tidslinjeEvents[1].eventTidspunkt `should be equal to` twoDaysAgo
+
+            tidslinjeEvents[2].shouldBeInstanceOf<StatusoppdateringDTO>()
+            tidslinjeEvents[2].eventTidspunkt `should be equal to` threeDaysAgo
+
+            tidslinjeEvents[3].shouldBeInstanceOf<OppgaveDTO>()
+            tidslinjeEvents[3].eventTidspunkt `should be equal to` fourDaysAgo
+        }
+    }
+
 }

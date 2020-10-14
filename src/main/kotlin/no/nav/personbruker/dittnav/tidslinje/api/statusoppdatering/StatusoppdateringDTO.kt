@@ -1,11 +1,12 @@
 package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
+import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.Brukernotifikasjon
 import java.time.ZonedDateTime
 
 data class StatusoppdateringDTO(
         val produsent: String?,
         val eventId: String,
-        val eventTidspunkt: ZonedDateTime,
+        override val eventTidspunkt: ZonedDateTime,
         val fodselsnummer: String,
         val grupperingsId: String,
         val link: String,
@@ -14,7 +15,7 @@ data class StatusoppdateringDTO(
         val statusGlobal: String,
         val statusIntern: String?,
         val sakstema: String
-) {
+) : Brukernotifikasjon {
     constructor(
             eventId: String,
             eventTidspunkt: ZonedDateTime,

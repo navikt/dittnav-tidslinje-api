@@ -14,7 +14,7 @@ fun Route.tidslinje(tidslinjeService: TidslinjeService) {
 
     val log = LoggerFactory.getLogger(TidslinjeService::class.java)
 
-    get("/fetch/grouped/tidslinje") {
+    get("/tidslinje") {
         try {
             val grupperingsId = validateNonNullFieldMaxLength(call.request.queryParameters["grupperingsid"], "grupperingsid", 100)
             val produsent = validateNonNullFieldMaxLength(call.request.queryParameters["produsent"], "produsent", 100)
