@@ -43,11 +43,9 @@ class StatusoppdateringServiceTest {
         runBlocking {
             val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
             val statusoppdateringDTO = statusoppdateringList.first()
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` "***"
             statusoppdateringDTO.statusIntern!! `should be equal to` "***"
             statusoppdateringDTO.sakstema `should be equal to` "***"
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` "***"
             statusoppdateringDTO.sikkerhetsnivaa `should be equal to` 4
         }
@@ -61,11 +59,9 @@ class StatusoppdateringServiceTest {
         runBlocking {
             val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
             val statusoppdateringDTO = statusoppdateringList.first()
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
             statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
             statusoppdateringDTO.sakstema `should be equal to` statusoppdatering.sakstema
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` statusoppdatering.link
             statusoppdateringDTO.sikkerhetsnivaa `should be equal to` 3
         }
@@ -78,11 +74,9 @@ class StatusoppdateringServiceTest {
         runBlocking {
             val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
             val statusoppdateringDTO = statusoppdateringList.first()
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
             statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
             statusoppdateringDTO.sakstema `should be equal to` statusoppdatering.sakstema
-            statusoppdateringDTO.fodselsnummer `should be equal to` statusoppdatering.fodselsnummer
             statusoppdateringDTO.link `should be equal to` statusoppdatering.link
             statusoppdateringDTO.sikkerhetsnivaa `should be equal to` 4
         }

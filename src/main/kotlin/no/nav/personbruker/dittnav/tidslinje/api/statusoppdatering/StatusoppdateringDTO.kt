@@ -7,7 +7,6 @@ data class StatusoppdateringDTO(
         val produsent: String?,
         val eventId: String,
         override val eventTidspunkt: ZonedDateTime,
-        val fodselsnummer: String,
         val grupperingsId: String,
         val link: String,
         val sikkerhetsnivaa: Int,
@@ -20,7 +19,6 @@ data class StatusoppdateringDTO(
     constructor(
             eventId: String,
             eventTidspunkt: ZonedDateTime,
-            fodselsnummer: String,
             grupperingsId: String,
             link: String,
             sikkerhetsnivaa: Int,
@@ -33,7 +31,6 @@ data class StatusoppdateringDTO(
             null,
             eventId,
             eventTidspunkt,
-            fodselsnummer,
             grupperingsId,
             link,
             sikkerhetsnivaa,
