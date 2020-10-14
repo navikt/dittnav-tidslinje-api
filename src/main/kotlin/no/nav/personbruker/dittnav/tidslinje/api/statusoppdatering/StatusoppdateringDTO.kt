@@ -14,7 +14,8 @@ data class StatusoppdateringDTO(
         val sistOppdatert: ZonedDateTime,
         val statusGlobal: String,
         val statusIntern: String?,
-        val sakstema: String
+        val sakstema: String,
+        val type: String
 ) : Brukernotifikasjon {
     constructor(
             eventId: String,
@@ -26,7 +27,8 @@ data class StatusoppdateringDTO(
             sistOppdatert: ZonedDateTime,
             statusGlobal: String,
             statusIntern: String?,
-            sakstema: String
+            sakstema: String,
+            type: String
     ) : this(
             null,
             eventId,
@@ -38,6 +40,7 @@ data class StatusoppdateringDTO(
             sistOppdatert,
             statusGlobal,
             statusIntern,
-            sakstema
+            sakstema,
+            type
     )
 }

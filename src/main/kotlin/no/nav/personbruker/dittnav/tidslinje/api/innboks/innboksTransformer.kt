@@ -9,12 +9,13 @@ fun toInnboksDTO(innboks: Innboks): InnboksDTO =
                     link = it.link,
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
-                    sikkerhetsnivaa = it.sikkerhetsnivaa
+                    sikkerhetsnivaa = it.sikkerhetsnivaa,
+                    type = "Innboks"
             )
         }
 
 fun toMaskedInnboksDTO(innboks: Innboks): InnboksDTO =
         innboks.let {
-            var maskedInnboksDTO = toInnboksDTO(innboks)
+            val maskedInnboksDTO = toInnboksDTO(innboks)
             return maskedInnboksDTO.copy(tekst = "***", link = "***", produsent = "***")
         }

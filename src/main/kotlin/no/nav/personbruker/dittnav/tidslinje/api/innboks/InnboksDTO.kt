@@ -12,7 +12,8 @@ data class InnboksDTO(
         val link: String,
         val produsent: String?,
         val sistOppdatert: ZonedDateTime,
-        val sikkerhetsnivaa: Int
+        val sikkerhetsnivaa: Int,
+        val type: String
 ) : Brukernotifikasjon {
     constructor(
             eventTidspunkt: ZonedDateTime,
@@ -21,7 +22,8 @@ data class InnboksDTO(
             link: String,
             produsent: String?,
             sistOppdatert: ZonedDateTime,
-            sikkerhetsnivaa: Int
+            sikkerhetsnivaa: Int,
+            type: String
     ) : this(
             null,
             eventTidspunkt,
@@ -30,6 +32,7 @@ data class InnboksDTO(
             link,
             produsent,
             sistOppdatert,
-            sikkerhetsnivaa
+            sikkerhetsnivaa,
+            type
     )
 }

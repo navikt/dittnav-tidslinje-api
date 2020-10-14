@@ -22,6 +22,7 @@ class StatusoppdateringTransformerTest {
         statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering1.statusGlobal
         statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering1.statusIntern!!
         statusoppdateringDTO.sakstema `should be equal to` statusoppdatering1.sakstema
+        statusoppdateringDTO.type `should be equal to` "Statusoppdatering"
     }
 
     @Test
@@ -37,5 +38,6 @@ class StatusoppdateringTransformerTest {
         statusoppdateringDTO.sikkerhetsnivaa `should be` statusoppdatering.sikkerhetsnivaa
         statusoppdateringDTO.statusGlobal `should be equal to` "***"
         statusoppdateringDTO.sakstema `should be equal to` "***"
+        statusoppdateringDTO.type `should be equal to` "Statusoppdatering"
     }
 }

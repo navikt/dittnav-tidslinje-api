@@ -20,6 +20,7 @@ class InnboksTransformerTest {
         innboksDTO.produsent!! `should be equal to` innboks1.produsent!!
         innboksDTO.sistOppdatert `should be` innboks1.sistOppdatert
         innboksDTO.sikkerhetsnivaa `should be` innboks1.sikkerhetsnivaa
+        innboksDTO.type `should be equal to` "Innboks"
     }
 
     @Test
@@ -33,5 +34,6 @@ class InnboksTransformerTest {
         innboksDTO.produsent!! `should be equal to` "***"
         innboksDTO.sistOppdatert `should be` innboks.sistOppdatert
         innboksDTO.sikkerhetsnivaa `should be` innboks.sikkerhetsnivaa
+        innboksDTO.type `should be equal to` "Innboks"
     }
 }

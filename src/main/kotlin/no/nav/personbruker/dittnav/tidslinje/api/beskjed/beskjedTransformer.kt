@@ -10,13 +10,14 @@ fun toBeskjedDTO(beskjed: Beskjed): BeskjedDTO =
                     link = it.link,
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
-                    sikkerhetsnivaa = it.sikkerhetsnivaa
+                    sikkerhetsnivaa = it.sikkerhetsnivaa,
+                    type = "Beskjed"
             )
         }
 
 fun toMaskedBeskjedDTO(beskjed: Beskjed): BeskjedDTO =
         beskjed.let {
-            var maskedBeskjedDTO = toBeskjedDTO(beskjed)
+            val maskedBeskjedDTO = toBeskjedDTO(beskjed)
             return maskedBeskjedDTO.copy(tekst = "***", link = "***", produsent = "***")
         }
 
