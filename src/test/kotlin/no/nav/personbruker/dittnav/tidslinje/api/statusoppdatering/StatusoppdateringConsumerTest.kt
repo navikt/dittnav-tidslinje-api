@@ -32,7 +32,7 @@ class StatusoppdateringConsumerTest {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/grouped/statusoppdatering") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/statusoppdatering/grouped") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -46,7 +46,7 @@ class StatusoppdateringConsumerTest {
         val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should equal` emptyList()
+            StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
         }
     }
 

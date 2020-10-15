@@ -8,7 +8,7 @@ import java.net.URL
 class BeskjedConsumer(
         private val client: HttpClient,
         private val eventHandlerBaseURL: URL,
-        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/grouped/beskjed")
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/beskjed/grouped")
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Beskjed> {

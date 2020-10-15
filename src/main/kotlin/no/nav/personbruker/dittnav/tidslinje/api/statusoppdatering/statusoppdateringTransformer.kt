@@ -6,7 +6,6 @@ fun toStatusoppdateringDTO(statusoppdatering: Statusoppdatering): Statusoppdater
                     produsent = it.produsent,
                     eventId = it.eventId,
                     eventTidspunkt = it.eventTidspunkt,
-                    grupperingsId = it.grupperingsId,
                     link = it.link,
                     sikkerhetsnivaa = it.sikkerhetsnivaa,
                     sistOppdatert = it.sistOppdatert,

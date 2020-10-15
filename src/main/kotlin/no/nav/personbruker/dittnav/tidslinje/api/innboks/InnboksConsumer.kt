@@ -8,7 +8,7 @@ import java.net.URL
 class InnboksConsumer(
         private val client: HttpClient,
         private val eventHandlerBaseURL: URL,
-        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/grouped/innboks")
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/innboks/grouped")
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Innboks> {

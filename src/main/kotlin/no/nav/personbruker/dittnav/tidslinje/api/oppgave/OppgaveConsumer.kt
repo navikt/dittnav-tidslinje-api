@@ -8,7 +8,7 @@ import java.net.URL
 class OppgaveConsumer(
         private val client: HttpClient,
         private val eventHandlerBaseURL: URL,
-        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/grouped/oppgave")
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/oppgave/grouped")
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Oppgave> {

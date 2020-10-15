@@ -1,7 +1,7 @@
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.Brukernotifikasjon
+import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
 import java.time.ZonedDateTime
 
 data class OppgaveDTO(
@@ -14,7 +14,7 @@ data class OppgaveDTO(
         val sistOppdatert: ZonedDateTime,
         val sikkerhetsnivaa: Int,
         val type: String
-) : Brukernotifikasjon {
+) : BrukernotifikasjonDTO {
     constructor(
             eventTidspunkt: ZonedDateTime,
             eventId: String,

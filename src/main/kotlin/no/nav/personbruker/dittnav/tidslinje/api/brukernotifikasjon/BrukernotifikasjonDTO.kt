@@ -2,6 +2,6 @@ package no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon
 
 import java.time.ZonedDateTime
 
-interface Brukernotifikasjon {
+interface BrukernotifikasjonDTO {
     val eventTidspunkt: ZonedDateTime
 }

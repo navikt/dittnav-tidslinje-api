@@ -9,7 +9,7 @@ import java.net.URL
 class StatusoppdateringConsumer(
         private val client: HttpClient,
         private val eventHandlerBaseURL: URL,
-        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/grouped/statusoppdatering")
+        private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/statusoppdatering/grouped")
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker,

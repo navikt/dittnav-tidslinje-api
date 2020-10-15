@@ -1,8 +1,10 @@
 package no.nav.personbruker.dittnav.tidslinje.api.tidslinje
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedDTO
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
-import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.Brukernotifikasjon
+import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksDTO
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksService
@@ -17,23 +19,25 @@ class TidslinjeService(private val statusoppdateringService: StatusoppdateringSe
                        private val innboksService: InnboksService
 ) {
 
-    suspend fun getTidslinjeEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Brukernotifikasjon> {
-        val statusoppdateringEvents = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, produsent)
-        val beskjedEvents = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsId, produsent)
-        val oppgaveEvents = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsId, produsent)
-        val innboksEvents = innboksService.getInnboksEvents(innloggetBruker, grupperingsId, produsent)
+    suspend fun getTidslinjeEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<BrukernotifikasjonDTO> {
 
-        val allEvents = createOneListOfAllEvents(statusoppdateringEvents, beskjedEvents, oppgaveEvents, innboksEvents)
+        val allEvents = coroutineScope {
+            val statusoppdateringEvents = async { statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, produsent) }
+            val beskjedEvents = async { beskjedService.getBeskjedEvents(innloggetBruker, grupperingsId, produsent) }
+            val oppgaveEvents = async { oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsId, produsent) }
+            val innboksEvents = async { innboksService.getInnboksEvents(innloggetBruker, grupperingsId, produsent) }
 
+            mergeLists(statusoppdateringEvents.await(), beskjedEvents.await(), oppgaveEvents.await(), innboksEvents.await())
+        }
         return sortByEventTidspunkt(allEvents)
     }
 
-    private fun createOneListOfAllEvents(statusoppdateringEvents: List<StatusoppdateringDTO>,
-                                         beskjedEvents: List<BeskjedDTO>,
-                                         oppgaveEvents: List<OppgaveDTO>,
-                                         innboksEvents: List<InnboksDTO>): List<Brukernotifikasjon> {
+    private fun mergeLists(statusoppdateringEvents: List<StatusoppdateringDTO>,
+                           beskjedEvents: List<BeskjedDTO>,
+                           oppgaveEvents: List<OppgaveDTO>,
+                           innboksEvents: List<InnboksDTO>): List<BrukernotifikasjonDTO> {
 
-        val allEvents = mutableListOf<Brukernotifikasjon>()
+        val allEvents = mutableListOf<BrukernotifikasjonDTO>()
         allEvents.addAll(statusoppdateringEvents)
         allEvents.addAll(beskjedEvents)
         allEvents.addAll(oppgaveEvents)
@@ -41,7 +45,7 @@ class TidslinjeService(private val statusoppdateringService: StatusoppdateringSe
         return allEvents
     }
 
-    private fun sortByEventTidspunkt(events: List<Brukernotifikasjon>): List<Brukernotifikasjon> {
+    private fun sortByEventTidspunkt(events: List<BrukernotifikasjonDTO>): List<BrukernotifikasjonDTO> {
         return events.sortedByDescending { event -> event.eventTidspunkt }
     }
 

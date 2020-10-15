@@ -34,7 +34,7 @@ class InnboksConsumerTest {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/grouped/innboks") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/innboks/grouped") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -48,7 +48,7 @@ class InnboksConsumerTest {
         val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should equal` emptyList()
+            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
         }
 
     }

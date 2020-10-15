@@ -34,7 +34,7 @@ class OppgaveConsumerTest {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/grouped/oppgave") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/oppgave/grouped") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -49,7 +49,7 @@ class OppgaveConsumerTest {
         val oppgaveConsumer = OppgaveConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should equal` emptyList()
+            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
         }
     }
 
