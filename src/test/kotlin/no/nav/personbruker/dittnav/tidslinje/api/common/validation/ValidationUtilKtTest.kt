@@ -2,6 +2,7 @@ package no.nav.personbruker.dittnav.tidslinje.api.common.validation
 
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.FieldValidationException
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
@@ -24,7 +25,7 @@ class ValidationUtilKtTest {
     fun `should return field when not null or blank`() {
         runBlocking {
             validateNonNullField(field, fieldName)
-        } `should equal` field
+        } `should be equal to` field
     }
 
     @Test

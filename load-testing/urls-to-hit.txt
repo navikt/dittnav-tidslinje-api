@@ -1,6 +1,0 @@
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/beskjed
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/beskjed/inaktiv
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/innboks
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/innboks/inaktiv
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/oppgave
-https://dittnav-api-q1.dev-sbs.nais.io/person/dittnav-tidslinje-api/oppgave/inaktiv
