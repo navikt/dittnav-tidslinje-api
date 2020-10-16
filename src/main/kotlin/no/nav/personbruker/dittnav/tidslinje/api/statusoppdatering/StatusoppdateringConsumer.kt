@@ -2,7 +2,6 @@ package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
 import io.ktor.client.HttpClient
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
-import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.config.getWithParameter
 import java.net.URL
 
@@ -12,14 +11,8 @@ class StatusoppdateringConsumer(
         private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/statusoppdatering/grouped")
 ) {
 
-    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker,
-                                  grupperingsId: String,
-                                  produsent: String): List<Statusoppdatering> {
-        try {
-            return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
-        } catch (exception: Exception) {
-            throw ConsumeEventException("Klarte ikke hente eksterne eventer av typen Statusoppdatering", exception)
-        }
+    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Statusoppdatering> {
+        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
     }
 
     private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker,

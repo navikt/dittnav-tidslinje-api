@@ -15,7 +15,7 @@ suspend fun ApplicationCall.pingDependencies(environment: Environment) = corouti
 
     val eventHandlerPingableURL = URL("${environment.eventHandlerURL}/internal/isAlive")
     val eventHandlerSelftestStatus = async { getStatus(eventHandlerPingableURL, client) }
-    val services = mutableMapOf("DITTNAV_EVENT_HANDLER:" to eventHandlerSelftestStatus.await())
+    val services = mapOf("DITTNAV_EVENT_HANDLER:" to eventHandlerSelftestStatus.await())
 
     client.close()
 

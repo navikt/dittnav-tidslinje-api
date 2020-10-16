@@ -11,11 +11,9 @@ class InnboksService(private val innboksConsumer: InnboksConsumer) {
         }
     }
 
-    private suspend fun getInnboksEvents(
-            innloggetBruker: InnloggetBruker,
-            getEvents: suspend (InnloggetBruker) -> List<Innboks>): List<InnboksDTO> {
+    private suspend fun getInnboksEvents(innloggetBruker: InnloggetBruker, getEvents: suspend () -> List<Innboks>): List<InnboksDTO> {
         return try {
-            val externalEvents = getEvents(innloggetBruker)
+            val externalEvents = getEvents()
             externalEvents.map { innboks -> transformToDTO(innboks, innloggetBruker) }
         } catch (exception: Exception) {
             throw ConsumeEventException("Klarte ikke hente eventer av type Innboks", exception)

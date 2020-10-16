@@ -12,9 +12,7 @@ class InnboksConsumer(
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Innboks> {
-        val completePathToEndpoint = URL("$pathToEndpoint")
-        val externalEvents = getExternalEvents(innloggetBruker, completePathToEndpoint, grupperingsId, produsent)
-        return externalEvents
+        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
     }
 
     private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, completePathToEndpoint: URL, grupperingsId: String, produsent: String): List<Innboks> {

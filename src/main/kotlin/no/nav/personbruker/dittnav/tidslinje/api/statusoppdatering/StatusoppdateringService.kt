@@ -11,12 +11,9 @@ class StatusoppdateringService(private val statusoppdateringConsumer: Statusoppd
         }
     }
 
-    private suspend fun getStatusoppdateringEvents(
-            innloggetBruker: InnloggetBruker,
-            getEvents: suspend (InnloggetBruker) -> List<Statusoppdatering>
-    ): List<StatusoppdateringDTO> {
+    private suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker, getEvents: suspend () -> List<Statusoppdatering>): List<StatusoppdateringDTO> {
         return try {
-            val externalEvents = getEvents(innloggetBruker)
+            val externalEvents = getEvents()
             externalEvents.map { statusoppdatering -> transformToDTO(statusoppdatering, innloggetBruker) }
         } catch (exception: Exception) {
             throw ConsumeEventException("Klarte ikke hente eventer av type Statusoppdatering", exception)

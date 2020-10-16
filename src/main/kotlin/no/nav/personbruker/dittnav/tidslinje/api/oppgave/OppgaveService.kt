@@ -11,12 +11,9 @@ class OppgaveService(private val oppgaveConsumer: OppgaveConsumer) {
         }
     }
 
-    private suspend fun getOppgaveEvents(
-            innloggetBruker: InnloggetBruker,
-            getEvents: suspend (InnloggetBruker) -> List<Oppgave>
-    ): List<OppgaveDTO> {
+    private suspend fun getOppgaveEvents(innloggetBruker: InnloggetBruker, getEvents: suspend () -> List<Oppgave>): List<OppgaveDTO> {
         return try {
-            val externalEvents = getEvents(innloggetBruker)
+            val externalEvents = getEvents()
             externalEvents.map { oppgave -> transformToDTO(oppgave, innloggetBruker) }
         } catch (exception: Exception) {
             throw ConsumeEventException("Klarte ikke hente eventer av type Oppgave", exception)

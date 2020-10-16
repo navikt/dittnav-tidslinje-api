@@ -11,11 +11,9 @@ class BeskjedService(private val beskjedConsumer: BeskjedConsumer) {
         }
     }
 
-    private suspend fun getBeskjedEvents(
-            innloggetBruker: InnloggetBruker,
-            getEvents: suspend (InnloggetBruker) -> List<Beskjed>): List<BeskjedDTO> {
+    private suspend fun getBeskjedEvents(innloggetBruker: InnloggetBruker, getEvents: suspend () -> List<Beskjed>): List<BeskjedDTO> {
         return try {
-            val externalEvents = getEvents(innloggetBruker)
+            val externalEvents = getEvents()
             externalEvents.map { beskjed -> transformToDTO(beskjed, innloggetBruker) }
         } catch (exception: Exception) {
             throw ConsumeEventException("Klarte ikke hente eventer av type Beskjed", exception)

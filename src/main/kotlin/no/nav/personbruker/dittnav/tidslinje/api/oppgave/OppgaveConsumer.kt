@@ -12,9 +12,7 @@ class OppgaveConsumer(
 ) {
 
     suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Oppgave> {
-        val completePathToEndpoint = URL("$pathToEndpoint")
-        val externalActiveEvents = getExternalEvents(innloggetBruker, completePathToEndpoint, grupperingsId, produsent)
-        return externalActiveEvents
+        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
     }
 
     private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, comletePathToEndpoint: URL, grupperingsId: String, produsent: String): List<Oppgave> {
