@@ -9,12 +9,13 @@ fun toOppgaveDTO(inbound: Oppgave): OppgaveDTO =
                     link = it.link,
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
-                    sikkerhetsnivaa = it.sikkerhetsnivaa
+                    sikkerhetsnivaa = it.sikkerhetsnivaa,
+                    type = "Oppgave"
             )
         }
 
 fun toMaskedOppgaveDTO(oppgave: Oppgave): OppgaveDTO =
         oppgave.let {
-            var maskedOppgaveDTO = toOppgaveDTO(oppgave)
+            val maskedOppgaveDTO = toOppgaveDTO(oppgave)
             return maskedOppgaveDTO.copy(tekst = "***", link = "***", produsent = "***")
         }

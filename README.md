@@ -7,7 +7,7 @@ Dette er backend delen til statusoppdateringer og tidslinjen.
 2. Start alle appens avhengigheter ved å kjøre `docker-compose -d`
 3. Ta ned dittnav-tidslinje-api ved å kjøre `docker-compose kill api`
 4. Start appen lokalt ved å kjøre `./gradlew runServer`
-5. Appen nås på ´http://localhost:8091´
+5. Appen nås på ´http://localhost:8099´
 
 # Feilsøking
 For å være sikker på at man får en ny tom database og tomme kafka-topics kan man kjøre kommandoen: `docker-compose down -v`

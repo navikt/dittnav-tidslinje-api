@@ -1,18 +1,20 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
 import java.time.ZonedDateTime
 
 data class BeskjedDTO(
         @JsonInclude(JsonInclude.Include.NON_NULL) val uid: String?,
-        val eventTidspunkt: ZonedDateTime,
+        override val eventTidspunkt: ZonedDateTime,
         val eventId: String,
         val tekst: String,
         val link: String,
         val produsent: String?,
         val sistOppdatert: ZonedDateTime,
-        val sikkerhetsnivaa: Int
-) {
+        val sikkerhetsnivaa: Int,
+        val type: String
+) : BrukernotifikasjonDTO {
     constructor(
             eventTidspunkt: ZonedDateTime,
             eventId: String,
@@ -20,7 +22,8 @@ data class BeskjedDTO(
             link: String,
             produsent: String?,
             sistOppdatert: ZonedDateTime,
-            sikkerhetsnivaa: Int
+            sikkerhetsnivaa: Int,
+            type: String
     ) : this(
             null,
             eventTidspunkt,
@@ -29,6 +32,7 @@ data class BeskjedDTO(
             link,
             produsent,
             sistOppdatert,
-            sikkerhetsnivaa
+            sikkerhetsnivaa,
+            type
     )
 }

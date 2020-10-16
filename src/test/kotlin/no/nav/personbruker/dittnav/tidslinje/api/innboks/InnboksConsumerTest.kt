@@ -26,13 +26,15 @@ import java.net.URL
 class InnboksConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val grupperingsid = "Dok123"
+    val produsent = "dittnav"
 
     @Test
     fun `should call innboks endpoint on event handler`() {
         val client = HttpClient(MockEngine) {
             engine {
                 addHandler { request ->
-                    if (request.url.encodedPath.contains("/fetch/innboks") && request.url.host.contains("event-handler")) {
+                    if (request.url.encodedPath.contains("/fetch/innboks/grouped") && request.url.host.contains("event-handler")) {
                         respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
                     } else {
                         respondError(HttpStatusCode.BadRequest)
@@ -46,13 +48,13 @@ class InnboksConsumerTest {
         val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            innboksConsumer.getExternalActiveEvents(innloggetBruker) `should equal` emptyList()
+            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
         }
 
     }
 
     @Test
-    fun `should get list of active Innboks`() {
+    fun `should get list of Innboks`() {
         val innboksObject1 = createInnboks("1", "1", true)
         val innboksObject2 = createInnboks("2", "2", true)
 
@@ -70,39 +72,12 @@ class InnboksConsumerTest {
         val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalActiveEvents = innboksConsumer.getExternalActiveEvents(innloggetBruker)
-            val event = externalActiveEvents.first()
-            externalActiveEvents.size `should be equal to` 2
+            val externalEvents = innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val event = externalEvents.first()
+            externalEvents.size `should be equal to` 2
             event.tekst `should be equal to` innboksObject1.tekst
             event.fodselsnummer `should be equal to` innboksObject1.fodselsnummer
             event.aktiv.`should be true`()
-        }
-    }
-
-    @Test
-    fun `should get list of inactive Innboks`() {
-        val innboksObject = createInnboks("1", "1", false)
-
-        val objectMapper = ObjectMapper().apply {
-            enableDittNavJsonConfig()
-        }
-
-        val client = getClient {
-            respond(
-                    objectMapper.writeValueAsString(listOf(innboksObject)),
-                    headers = headersOf(HttpHeaders.ContentType,
-                            ContentType.Application.Json.toString())
-            )
-        }
-        val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
-
-        runBlocking {
-            val externalInactiveEvents = innboksConsumer.getExternalInactiveEvents(innloggetBruker)
-            val event = externalInactiveEvents.first()
-            externalInactiveEvents.size `should be equal to` 1
-            event.tekst `should be equal to` innboksObject.tekst
-            event.fodselsnummer `should be equal to` innboksObject.fodselsnummer
-            event.aktiv.`should be false`()
         }
     }
 

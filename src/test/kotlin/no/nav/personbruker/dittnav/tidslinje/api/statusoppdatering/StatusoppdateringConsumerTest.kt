@@ -24,10 +24,35 @@ import java.net.URL
 class StatusoppdateringConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val grupperingsid = "Dok123"
+    val produsent = "dittnav"
+
+    @Test
+    fun `should call information endpoint on event handler`() {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler { request ->
+                    if (request.url.encodedPath.contains("/fetch/statusoppdatering/grouped") && request.url.host.contains("event-handler")) {
+                        respond("[]", headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
+                    } else {
+                        respondError(HttpStatusCode.BadRequest)
+                    }
+                }
+            }
+            install(JsonFeature) {
+                serializer = buildJsonSerializer()
+            }
+        }
+        val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
+
+        runBlocking {
+            StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+        }
+    }
 
     @Test
     fun `should get list of Statusoppdatering`() {
-        val StatusoppdateringObject = createStatusoppdatering("1", "1")
+        val StatusoppdateringObject = createStatusoppdatering(eventId = "1", fodselsnummer = "1")
         val objectMapper = ObjectMapper().apply {
             enableDittNavJsonConfig()
         }
@@ -41,10 +66,11 @@ class StatusoppdateringConsumerTest {
         val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalActiveEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker)
-            val event = externalActiveEvents.first()
-            externalActiveEvents.size `should be equal to` 1
+            val externalEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val event = externalEvents.first()
+            externalEvents.size `should be equal to` 1
             event.statusGlobal `should be equal to` StatusoppdateringObject.statusGlobal
+            event.statusIntern!! `should be equal to` StatusoppdateringObject.statusIntern!!
             event.sakstema `should be equal to` StatusoppdateringObject.sakstema
             event.fodselsnummer `should be equal to` StatusoppdateringObject.fodselsnummer
         }

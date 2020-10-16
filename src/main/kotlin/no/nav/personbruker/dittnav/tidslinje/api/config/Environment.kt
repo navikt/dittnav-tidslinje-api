@@ -3,7 +3,6 @@ package no.nav.personbruker.dittnav.tidslinje.api.config
 import java.net.URL
 
 data class Environment(
-        val legacyApiURL: URL = URL(getEnvVar("LEGACY_API_URL").trimEnd('/')),
         val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/')),
         val corsAllowedOrigins: String = getEnvVar("CORS_ALLOWED_ORIGINS"),
         val corsAllowedSchemes: String = getOptionalEnvVar("CORS_ALLOWED_SCHEMES", "https")
