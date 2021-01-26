@@ -1,6 +1,6 @@
 {
   "ingresses": [
     "https://www.dev.nav.no/person/dittnav-tidslinje-api",
-    "https://dittnav-tidslinje-api.nais.oera-q.local/person/dittnav-tidslinje-api"
+    "https://dittnav-tidslinje-api.dev.nav.no/person/dittnav-tidslinje-api"
   ]
 }
