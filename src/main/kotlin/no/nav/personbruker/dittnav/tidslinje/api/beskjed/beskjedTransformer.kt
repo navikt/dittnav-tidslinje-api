@@ -11,7 +11,7 @@ fun toBeskjedDTO(beskjed: Beskjed): BeskjedDTO =
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
                     sikkerhetsnivaa = it.sikkerhetsnivaa,
-                    type = "Beskjed"
+                    eventtype = "Beskjed"
             )
         }
 

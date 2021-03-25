@@ -5,6 +5,7 @@ plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
     kotlin("jvm").version(Kotlin.version)
     kotlin("plugin.allopen").version(Kotlin.version)
+    kotlin("plugin.serialization").version(Kotlin.version)
 
     id(Shadow.pluginId) version Shadow.version
 
@@ -13,7 +14,7 @@ plugins {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "13"
 }
 
 repositories {
@@ -25,19 +26,17 @@ repositories {
 }
 
 dependencies {
-    implementation(Jackson.dataTypeJsr310)
     implementation(Kotlinx.coroutines)
     implementation(Kotlinx.htmlJvm)
     implementation(Ktor.auth)
     implementation(Ktor.authJwt)
     implementation(Ktor.clientApache)
-    implementation(Ktor.clientJackson)
     implementation(Ktor.clientJson)
     implementation(Ktor.clientLogging)
     implementation(Ktor.clientLoggingJvm)
     implementation(Ktor.clientSerializationJvm)
     implementation(Ktor.htmlBuilder)
-    implementation(Ktor.jackson)
+    implementation(Ktor.serialization)
     implementation(Ktor.serverNetty)
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
@@ -55,12 +54,12 @@ dependencies {
 
     testRuntimeOnly(Bouncycastle.bcprovJdk15on)
     testRuntimeOnly(Jjwt.impl)
-    testRuntimeOnly(Jjwt.jackson)
     testRuntimeOnly(Junit.engine)
+    testRuntimeOnly(Jjwt.orgjson)
 }
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 tasks {
@@ -79,9 +78,12 @@ tasks {
             environment(name, value)
         }
 
-        main = application.mainClassName
+        main = application.mainClass.get()
         classpath = sourceSets["main"].runtimeClasspath
     }
 }
 
+// TODO: Fjern følgende work around i ny versjon av Shadow-pluginet:
+// Skal være løst i denne: https://github.com/johnrengelman/shadow/pull/612
+project.setProperty("mainClassName", application.mainClass.get())
 apply(plugin = Shadow.pluginId)

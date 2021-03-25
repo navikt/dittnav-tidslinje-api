@@ -1,17 +1,24 @@
 package no.nav.personbruker.dittnav.tidslinje.api.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.client.features.json.JacksonSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
+import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedDTO
+import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
+import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksDTO
+import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveDTO
+import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.StatusoppdateringDTO
 
-fun buildJsonSerializer(): JacksonSerializer {
-    return JacksonSerializer {
-        enableDittNavJsonConfig()
+fun json(): Json {
+    return Json {
+        this.serializersModule = SerializersModule {
+            polymorphic(BrukernotifikasjonDTO::class) {
+                subclass(BeskjedDTO::class)
+                subclass(OppgaveDTO::class)
+                subclass(InnboksDTO::class)
+                subclass(StatusoppdateringDTO::class)
+            }
+        }
     }
-}
-
-fun ObjectMapper.enableDittNavJsonConfig() {
-    registerModule(JavaTimeModule())
-    disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 }

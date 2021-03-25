@@ -1,25 +1,16 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
-
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.respondError
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.HttpResponseData
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import io.ktor.client.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
-import no.nav.personbruker.dittnav.tidslinje.api.config.buildJsonSerializer
-import no.nav.personbruker.dittnav.tidslinje.api.config.enableDittNavJsonConfig
+import no.nav.personbruker.dittnav.tidslinje.api.config.json
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be true`
-import org.amshove.kluent.`should equal`
 import org.junit.jupiter.api.Test
 import java.net.URL
 
@@ -41,9 +32,7 @@ class BeskjedConsumerTest {
                     }
                 }
             }
-            install(JsonFeature) {
-                serializer = buildJsonSerializer()
-            }
+            install(JsonFeature)
         }
         val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
 
@@ -55,12 +44,10 @@ class BeskjedConsumerTest {
     @Test
     fun `should get list of Beskjed`() {
         val beskjedObject = createBeskjed(eventId = "1", fodselsnummer = "1", uid = "1", aktiv = true)
-        val objectMapper = ObjectMapper().apply {
-            enableDittNavJsonConfig()
-        }
+
         val client = getClient {
             respond(
-                    objectMapper.writeValueAsString(listOf(beskjedObject)),
+                    json().encodeToString(listOf(beskjedObject)),
                     headers = headersOf(HttpHeaders.ContentType,
                             ContentType.Application.Json.toString())
             )
@@ -84,10 +71,7 @@ class BeskjedConsumerTest {
                     respond()
                 }
             }
-            install(JsonFeature) {
-                serializer = buildJsonSerializer()
-            }
+            install(JsonFeature)
         }
     }
-
 }

@@ -10,7 +10,7 @@ fun toOppgaveDTO(inbound: Oppgave): OppgaveDTO =
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
                     sikkerhetsnivaa = it.sikkerhetsnivaa,
-                    type = "Oppgave"
+                    eventtype = "Oppgave"
             )
         }
 

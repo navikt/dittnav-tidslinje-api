@@ -1,23 +1,15 @@
 package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.respondError
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.HttpResponseData
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import io.ktor.client.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
-import no.nav.personbruker.dittnav.tidslinje.api.config.buildJsonSerializer
-import no.nav.personbruker.dittnav.tidslinje.api.config.enableDittNavJsonConfig
+import no.nav.personbruker.dittnav.tidslinje.api.config.json
 import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should equal`
 import org.junit.jupiter.api.Test
 import java.net.URL
 
@@ -39,40 +31,36 @@ class StatusoppdateringConsumerTest {
                     }
                 }
             }
-            install(JsonFeature) {
-                serializer = buildJsonSerializer()
-            }
+            install(JsonFeature)
         }
-        val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
+        val statusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
         }
     }
 
     @Test
     fun `should get list of Statusoppdatering`() {
-        val StatusoppdateringObject = createStatusoppdatering(eventId = "1", fodselsnummer = "1")
-        val objectMapper = ObjectMapper().apply {
-            enableDittNavJsonConfig()
-        }
+        val statusoppdateringObject = createStatusoppdatering(eventId = "1", fodselsnummer = "1")
+
         val client = getClient {
             respond(
-                    objectMapper.writeValueAsString(listOf(StatusoppdateringObject)),
+                    json().encodeToString(listOf(statusoppdateringObject)),
                     headers = headersOf(HttpHeaders.ContentType,
                             ContentType.Application.Json.toString())
             )
         }
-        val StatusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
+        val statusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalEvents = StatusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val externalEvents = statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
             val event = externalEvents.first()
             externalEvents.size `should be equal to` 1
-            event.statusGlobal `should be equal to` StatusoppdateringObject.statusGlobal
-            event.statusIntern!! `should be equal to` StatusoppdateringObject.statusIntern!!
-            event.sakstema `should be equal to` StatusoppdateringObject.sakstema
-            event.fodselsnummer `should be equal to` StatusoppdateringObject.fodselsnummer
+            event.statusGlobal `should be equal to` statusoppdateringObject.statusGlobal
+            event.statusIntern!! `should be equal to` statusoppdateringObject.statusIntern!!
+            event.sakstema `should be equal to` statusoppdateringObject.sakstema
+            event.fodselsnummer `should be equal to` statusoppdateringObject.fodselsnummer
         }
     }
 
@@ -83,9 +71,7 @@ class StatusoppdateringConsumerTest {
                     respond()
                 }
             }
-            install(JsonFeature) {
-                serializer = buildJsonSerializer()
-            }
+            install(JsonFeature)
         }
     }
 }
