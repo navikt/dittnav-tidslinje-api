@@ -20,7 +20,7 @@ class OppgaveTransformerTest {
         oppgaveDTO.produsent!! `should be equal to` oppgave1.produsent!!
         oppgaveDTO.sistOppdatert `should be` oppgave1.sistOppdatert
         oppgaveDTO.sikkerhetsnivaa `should be` oppgave1.sikkerhetsnivaa
-        oppgaveDTO.type `should be equal to` "Oppgave"
+        oppgaveDTO.eventtype `should be equal to` "Oppgave"
     }
 
     @Test
@@ -34,6 +34,6 @@ class OppgaveTransformerTest {
         oppgaveDTO.produsent!! `should be equal to` "***"
         oppgaveDTO.sistOppdatert `should be` oppgave.sistOppdatert
         oppgaveDTO.sikkerhetsnivaa `should be` oppgave.sikkerhetsnivaa
-        oppgaveDTO.type `should be equal to` "Oppgave"
+        oppgaveDTO.eventtype `should be equal to` "Oppgave"
     }
 }

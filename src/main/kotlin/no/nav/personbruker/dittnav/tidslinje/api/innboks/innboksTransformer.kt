@@ -10,7 +10,7 @@ fun toInnboksDTO(innboks: Innboks): InnboksDTO =
                     produsent = it.produsent,
                     sistOppdatert = it.sistOppdatert,
                     sikkerhetsnivaa = it.sikkerhetsnivaa,
-                    type = "Innboks"
+                    eventtype = "Innboks"
             )
         }
 

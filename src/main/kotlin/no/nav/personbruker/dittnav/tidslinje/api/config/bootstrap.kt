@@ -1,18 +1,15 @@
 package no.nav.personbruker.dittnav.tidslinje.api.config
 
 import io.ktor.application.*
-import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
-import io.ktor.auth.authentication
-import io.ktor.client.HttpClient
-import io.ktor.features.CORS
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
-import io.ktor.http.HttpHeaders
-import io.ktor.jackson.jackson
-import io.ktor.routing.routing
-import io.ktor.util.KtorExperimentalAPI
-import io.ktor.util.pipeline.PipelineContext
+import io.ktor.auth.*
+import io.ktor.client.*
+import io.ktor.client.features.json.serializer.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.routing.*
+import io.ktor.serialization.*
+import io.ktor.util.*
+import io.ktor.util.pipeline.*
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
@@ -36,7 +33,7 @@ fun Application.mainModule() {
 
     DefaultExports.initialize()
 
-    val httpClient = HttpClientBuilder.build()
+    val httpClient = HttpClientBuilder.build(KotlinxSerializer(json()))
 
     val beskjedConsumer = BeskjedConsumer(httpClient, environment.eventHandlerURL)
     val oppgaveConsumer = OppgaveConsumer(httpClient, environment.eventHandlerURL)
@@ -64,13 +61,11 @@ fun Application.mainModule() {
     }
 
     install(ContentNegotiation) {
-        jackson {
-            enableDittNavJsonConfig()
-        }
+        json(no.nav.personbruker.dittnav.tidslinje.api.config.json())
     }
 
     routing {
-        healthApi(environment)
+        healthApi(httpClient, environment)
         authenticate {
             tidslinje(tidslinjeService)
             authenticationCheck()

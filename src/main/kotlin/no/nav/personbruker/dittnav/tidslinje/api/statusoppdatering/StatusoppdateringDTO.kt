@@ -1,8 +1,15 @@
+@file:UseSerializers(ZonedDateTimeSerializer::class)
 package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
+import no.nav.personbruker.dittnav.tidslinje.api.common.serializer.ZonedDateTimeSerializer
 import java.time.ZonedDateTime
 
+@Serializable
+@SerialName("Statusoppdatering")
 data class StatusoppdateringDTO(
         val produsent: String?,
         val eventId: String,
@@ -13,7 +20,7 @@ data class StatusoppdateringDTO(
         val statusGlobal: String,
         val statusIntern: String?,
         val sakstema: String,
-        val type: String
+        override val eventtype: String
 ) : BrukernotifikasjonDTO {
     constructor(
             eventId: String,
@@ -24,7 +31,7 @@ data class StatusoppdateringDTO(
             statusGlobal: String,
             statusIntern: String?,
             sakstema: String,
-            type: String
+            eventtype: String
     ) : this(
             null,
             eventId,
@@ -35,6 +42,6 @@ data class StatusoppdateringDTO(
             statusGlobal,
             statusIntern,
             sakstema,
-            type
+            eventtype
     )
 }

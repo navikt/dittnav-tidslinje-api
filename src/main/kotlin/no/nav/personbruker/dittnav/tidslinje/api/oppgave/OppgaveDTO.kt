@@ -1,11 +1,17 @@
+@file:UseSerializers(ZonedDateTimeSerializer::class)
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
-import com.fasterxml.jackson.annotation.JsonInclude
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
+import no.nav.personbruker.dittnav.tidslinje.api.common.serializer.ZonedDateTimeSerializer
 import java.time.ZonedDateTime
 
+@Serializable
+@SerialName("Oppgave")
 data class OppgaveDTO(
-        @JsonInclude(JsonInclude.Include.NON_NULL) val uid: String?,
+        val uid: String?,
         override val eventTidspunkt: ZonedDateTime,
         val eventId: String,
         val tekst: String,
@@ -13,7 +19,7 @@ data class OppgaveDTO(
         val produsent: String?,
         val sistOppdatert: ZonedDateTime,
         val sikkerhetsnivaa: Int,
-        val type: String
+        override val eventtype: String
 ) : BrukernotifikasjonDTO {
     constructor(
             eventTidspunkt: ZonedDateTime,
@@ -23,7 +29,7 @@ data class OppgaveDTO(
             produsent: String?,
             sistOppdatert: ZonedDateTime,
             sikkerhetsnivaa: Int,
-            type: String
+            eventtype: String
     ) : this(
             null,
             eventTidspunkt,
@@ -33,6 +39,6 @@ data class OppgaveDTO(
             produsent,
             sistOppdatert,
             sikkerhetsnivaa,
-            type
+            eventtype
     )
 }

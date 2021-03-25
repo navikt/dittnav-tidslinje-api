@@ -4,4 +4,5 @@ import java.time.ZonedDateTime
 
 interface BrukernotifikasjonDTO {
     val eventTidspunkt: ZonedDateTime
+    val eventtype: String
 }

@@ -12,7 +12,7 @@ fun toStatusoppdateringDTO(statusoppdatering: Statusoppdatering): Statusoppdater
                     statusGlobal = it.statusGlobal,
                     statusIntern = it.statusIntern,
                     sakstema = it.sakstema,
-                    type = "Statusoppdatering"
+                    eventtype = "Statusoppdatering"
             )
         }
 
