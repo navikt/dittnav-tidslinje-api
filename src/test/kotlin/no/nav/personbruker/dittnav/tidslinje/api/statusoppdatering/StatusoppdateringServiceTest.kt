@@ -16,7 +16,7 @@ class StatusoppdateringServiceTest {
     val statusoppdateringConsumer = mockk<StatusoppdateringConsumer>()
     val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
 
     @Test
     fun `should return list of statusoppdateringDTO when Events are received`() {
@@ -24,11 +24,11 @@ class StatusoppdateringServiceTest {
         val statusoppdatering2 = createStatusoppdatering("2", "2")
 
         coEvery {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
         } returns listOf(statusoppdatering1, statusoppdatering2)
 
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, systembruker)
             statusoppdateringList.size `should be equal to` 2
         }
     }
@@ -39,9 +39,9 @@ class StatusoppdateringServiceTest {
         var statusoppdatering = createStatusoppdatering("1", "1")
         statusoppdatering = statusoppdatering.copy(sikkerhetsnivaa = 4)
         innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(ident, 3)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, systembruker)
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.statusGlobal `should be equal to` "***"
             statusoppdateringDTO.statusIntern!! `should be equal to` "***"
@@ -55,9 +55,9 @@ class StatusoppdateringServiceTest {
     fun `should not mask events with security level lower than current user`() {
         var statusoppdatering = createStatusoppdatering("1", "1")
         statusoppdatering = statusoppdatering.copy(sikkerhetsnivaa = 3)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, systembruker)
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
             statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
@@ -70,9 +70,9 @@ class StatusoppdateringServiceTest {
     @Test
     fun `should not mask events with security level equal than current user`() {
         val statusoppdatering = createStatusoppdatering("1", "1")
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdatering)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(statusoppdatering)
         runBlocking {
-            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
+            val statusoppdateringList = statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, systembruker)
             val statusoppdateringDTO = statusoppdateringList.first()
             statusoppdateringDTO.statusGlobal `should be equal to` statusoppdatering.statusGlobal
             statusoppdateringDTO.statusIntern!! `should be equal to` statusoppdatering.statusIntern!!
@@ -85,12 +85,12 @@ class StatusoppdateringServiceTest {
     @Test
     fun `should throw exception if fetching events fails`() {
         coEvery {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
         } throws Exception("Test error")
 
         invoking {
             runBlocking {
-                statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, produsent)
+                statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsid, systembruker)
             }
         } `should throw` ConsumeEventException::class
     }

@@ -1,5 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.tidslinje
 
+import Systembruker
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedDTO
@@ -19,13 +20,13 @@ class TidslinjeService(private val statusoppdateringService: StatusoppdateringSe
                        private val innboksService: InnboksService
 ) {
 
-    suspend fun getTidslinjeEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<BrukernotifikasjonDTO> {
+    suspend fun getTidslinjeEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<BrukernotifikasjonDTO> {
 
         val allEvents = coroutineScope {
-            val statusoppdateringEvents = async { statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, produsent) }
-            val beskjedEvents = async { beskjedService.getBeskjedEvents(innloggetBruker, grupperingsId, produsent) }
-            val oppgaveEvents = async { oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsId, produsent) }
-            val innboksEvents = async { innboksService.getInnboksEvents(innloggetBruker, grupperingsId, produsent) }
+            val statusoppdateringEvents = async { statusoppdateringService.getStatusoppdateringEvents(innloggetBruker, grupperingsId, systembruker) }
+            val beskjedEvents = async { beskjedService.getBeskjedEvents(innloggetBruker, grupperingsId, systembruker) }
+            val oppgaveEvents = async { oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsId, systembruker) }
+            val innboksEvents = async { innboksService.getInnboksEvents(innloggetBruker, grupperingsId, systembruker) }
 
             mergeLists(statusoppdateringEvents.await(), beskjedEvents.await(), oppgaveEvents.await(), innboksEvents.await())
         }

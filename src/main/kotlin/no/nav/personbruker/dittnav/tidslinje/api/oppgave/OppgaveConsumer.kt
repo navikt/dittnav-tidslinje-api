@@ -1,5 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
+import Systembruker
 import io.ktor.client.HttpClient
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.config.getWithParameter
@@ -11,11 +12,14 @@ class OppgaveConsumer(
         private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/oppgave/grouped")
 ) {
 
-    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Oppgave> {
-        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
+    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<Oppgave> {
+        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, systembruker)
     }
 
-    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, comletePathToEndpoint: URL, grupperingsId: String, produsent: String): List<Oppgave> {
-        return client.getWithParameter(comletePathToEndpoint, innloggetBruker, grupperingsId, produsent)
+    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker,
+                                          completePathToEndpoint: URL,
+                                          grupperingsId: String,
+                                          systembruker: Systembruker): List<Oppgave> {
+        return client.getWithParameter(completePathToEndpoint, innloggetBruker, grupperingsId, systembruker)
     }
 }

@@ -1,5 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
+import Systembruker
 import io.ktor.client.HttpClient
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.config.getWithParameter
@@ -11,11 +12,14 @@ class BeskjedConsumer(
         private val pathToEndpoint: URL = URL("$eventHandlerBaseURL/fetch/beskjed/grouped")
 ) {
 
-    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<Beskjed> {
-        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, produsent)
+    suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<Beskjed> {
+        return getExternalEvents(innloggetBruker, pathToEndpoint, grupperingsId, systembruker)
     }
 
-    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker, completePathToEndpoint: URL, grupperingsId: String, produsent: String): List<Beskjed> {
-        return client.getWithParameter(completePathToEndpoint, innloggetBruker, grupperingsId, produsent)
+    private suspend fun getExternalEvents(innloggetBruker: InnloggetBruker,
+                                          completePathToEndpoint: URL,
+                                          grupperingsId: String,
+                                          systembruker: Systembruker): List<Beskjed> {
+        return client.getWithParameter(completePathToEndpoint, innloggetBruker, grupperingsId, systembruker)
     }
 }

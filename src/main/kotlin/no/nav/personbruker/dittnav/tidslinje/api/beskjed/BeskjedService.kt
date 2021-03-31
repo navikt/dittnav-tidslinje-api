@@ -1,13 +1,14 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
+import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
 class BeskjedService(private val beskjedConsumer: BeskjedConsumer) {
 
-    suspend fun getBeskjedEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<BeskjedDTO> {
+    suspend fun getBeskjedEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<BeskjedDTO> {
         return getBeskjedEvents(innloggetBruker) {
-            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
+            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsId, systembruker)
         }
     }
 

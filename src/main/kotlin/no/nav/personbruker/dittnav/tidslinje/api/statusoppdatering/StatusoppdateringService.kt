@@ -1,13 +1,14 @@
 package no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering
 
+import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
 class StatusoppdateringService(private val statusoppdateringConsumer: StatusoppdateringConsumer) {
 
-    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<StatusoppdateringDTO> {
+    suspend fun getStatusoppdateringEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<StatusoppdateringDTO> {
         return getStatusoppdateringEvents(innloggetBruker) {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsId, systembruker)
         }
     }
 

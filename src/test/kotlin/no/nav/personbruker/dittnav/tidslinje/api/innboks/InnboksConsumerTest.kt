@@ -18,7 +18,7 @@ class InnboksConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
 
     @Test
     fun `should call innboks endpoint on event handler`() {
@@ -37,7 +37,7 @@ class InnboksConsumerTest {
         val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) `should be equal to` emptyList()
         }
 
     }
@@ -57,7 +57,7 @@ class InnboksConsumerTest {
         val innboksConsumer = InnboksConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalEvents = innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val externalEvents = innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
             val event = externalEvents.first()
             externalEvents.size `should be equal to` 2
             event.tekst `should be equal to` innboksObject1.tekst

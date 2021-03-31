@@ -16,16 +16,16 @@ class OppgaveServiceTest {
     val oppgaveService = OppgaveService(oppgaveConsumer)
     var innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
     val fodselsnummer = "1"
 
     @Test
     fun `should return list of OppgaveDTO when Events are received`() {
         val oppgave1 = createOppgave(eventId = "1", fodselsnummer = fodselsnummer, aktiv = true)
         val oppgave2 = createOppgave(eventId = "2", fodselsnummer = "2", aktiv = true)
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgave1, oppgave2)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgave1, oppgave2)
         runBlocking {
-            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, produsent)
+            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, systembruker)
             oppgaveList.size `should be equal to` 2
         }
     }
@@ -35,9 +35,9 @@ class OppgaveServiceTest {
         var oppgave = createOppgave(eventId = "1", fodselsnummer = fodselsnummer, aktiv = true)
         oppgave = oppgave.copy(sikkerhetsnivaa = 4)
         innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(ident = fodselsnummer, innloggingsnivaa = 3)
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgave)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgave)
         runBlocking {
-            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, produsent)
+            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, systembruker)
             val oppgaveDTO = oppgaveList.first()
             oppgaveDTO.tekst `should be equal to` "***"
             oppgaveDTO.link `should be equal to` "***"
@@ -49,9 +49,9 @@ class OppgaveServiceTest {
     fun `should not mask events with security level lower than current user`() {
         var oppgave = createOppgave(eventId = "1", fodselsnummer = fodselsnummer, aktiv = true)
         oppgave = oppgave.copy(sikkerhetsnivaa = 3)
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgave)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgave)
         runBlocking {
-            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, produsent)
+            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, systembruker)
             val oppgaveDTO = oppgaveList.first()
             oppgaveDTO.tekst `should be equal to` oppgave.tekst
             oppgaveDTO.link `should be equal to` oppgave.link
@@ -62,9 +62,9 @@ class OppgaveServiceTest {
     @Test
     fun `should not mask events with security level equal than current user`() {
         val oppgave = createOppgave(eventId = "1", fodselsnummer = fodselsnummer, aktiv = true)
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgave)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgave)
         runBlocking {
-            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, produsent)
+            val oppgaveList = oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, systembruker)
             val oppgaveDTO = oppgaveList.first()
             oppgaveDTO.tekst `should be equal to` oppgave.tekst
             oppgaveDTO.link `should be equal to` oppgave.link
@@ -75,11 +75,11 @@ class OppgaveServiceTest {
     @Test
     fun `should throw exception if fetching events fail`() {
         coEvery {
-            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
         } throws Exception("error")
         invoking {
             runBlocking {
-                oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, produsent)
+                oppgaveService.getOppgaveEvents(innloggetBruker, grupperingsid, systembruker)
             }
         } `should throw` ConsumeEventException::class
     }

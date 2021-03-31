@@ -17,7 +17,7 @@ class StatusoppdateringConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
 
     @Test
     fun `should call information endpoint on event handler`() {
@@ -36,7 +36,7 @@ class StatusoppdateringConsumerTest {
         val statusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+            statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) `should be equal to` emptyList()
         }
     }
 
@@ -54,7 +54,7 @@ class StatusoppdateringConsumerTest {
         val statusoppdateringConsumer = StatusoppdateringConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalEvents = statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val externalEvents = statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
             val event = externalEvents.first()
             externalEvents.size `should be equal to` 1
             event.statusGlobal `should be equal to` statusoppdateringObject.statusGlobal

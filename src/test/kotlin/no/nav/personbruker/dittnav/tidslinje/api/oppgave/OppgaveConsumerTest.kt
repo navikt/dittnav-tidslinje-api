@@ -18,7 +18,7 @@ class OppgaveConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
 
     @Test
     fun `should call oppgave endpoint on event handler`() {
@@ -39,7 +39,7 @@ class OppgaveConsumerTest {
         val oppgaveConsumer = OppgaveConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+            oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) `should be equal to` emptyList()
         }
     }
 
@@ -58,7 +58,7 @@ class OppgaveConsumerTest {
         val oppgaveConsumer = OppgaveConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalEvents = oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val externalEvents = oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
             val event = externalEvents.first()
             externalEvents.size `should be equal to` 2
             event.tekst `should be equal to` oppgaveObject1.tekst

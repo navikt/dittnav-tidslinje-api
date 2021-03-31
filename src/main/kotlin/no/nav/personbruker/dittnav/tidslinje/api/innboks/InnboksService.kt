@@ -1,13 +1,14 @@
 package no.nav.personbruker.dittnav.tidslinje.api.innboks
 
+import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 
 class InnboksService(private val innboksConsumer: InnboksConsumer) {
 
-    suspend fun getInnboksEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, produsent: String): List<InnboksDTO> {
+    suspend fun getInnboksEvents(innloggetBruker: InnloggetBruker, grupperingsId: String, systembruker: Systembruker): List<InnboksDTO> {
         return getInnboksEvents(innloggetBruker) {
-            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsId, produsent)
+            innboksConsumer.getExternalEvents(innloggetBruker, grupperingsId, systembruker)
         }
     }
 

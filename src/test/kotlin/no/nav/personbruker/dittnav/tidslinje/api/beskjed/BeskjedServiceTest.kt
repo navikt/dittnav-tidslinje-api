@@ -16,16 +16,16 @@ class BeskjedServiceTest {
     val beskjedConsumer = mockk<BeskjedConsumer>()
     val beskjedService = BeskjedService(beskjedConsumer)
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
     val fodselsnummer = "1"
 
     @Test
     fun `should return list of BeskjedDTO when Events are received`() {
         val beskjed1 = createBeskjed(eventId = "1", fodselsnummer = fodselsnummer, uid = "1", aktiv = true)
         val beskjed2 = createBeskjed(eventId = "2", fodselsnummer = "2", uid = "2", aktiv = true)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjed1, beskjed2)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjed1, beskjed2)
         runBlocking {
-            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, produsent)
+            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, systembruker)
             beskjedList.size `should be equal to` 2
         }
     }
@@ -35,9 +35,9 @@ class BeskjedServiceTest {
         var beskjed = createBeskjed(eventId = "1", fodselsnummer = fodselsnummer, uid = "1", aktiv = true)
         beskjed = beskjed.copy(sikkerhetsnivaa = 4)
         innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer, innloggingsnivaa = 3)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjed)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjed)
         runBlocking {
-            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, produsent)
+            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, systembruker)
             val beskjedDTO = beskjedList.first()
             beskjedDTO.tekst `should be equal to` "***"
             beskjedDTO.link `should be equal to` "***"
@@ -49,9 +49,9 @@ class BeskjedServiceTest {
     fun `should not mask events with security level lower than current user`() {
         var beskjed = createBeskjed(eventId = "1", fodselsnummer = fodselsnummer, uid = "1", aktiv = true)
         beskjed = beskjed.copy(sikkerhetsnivaa = 3)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjed)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjed)
         runBlocking {
-            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, produsent)
+            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, systembruker)
             val beskjedDTO = beskjedList.first()
             beskjedDTO.tekst `should be equal to` beskjed.tekst
             beskjedDTO.link `should be equal to` beskjed.link
@@ -62,9 +62,9 @@ class BeskjedServiceTest {
     @Test
     fun `should not mask events with security level equal than current user`() {
         val beskjed = createBeskjed(eventId = "1", fodselsnummer = fodselsnummer, uid = "1", aktiv = true)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjed)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjed)
         runBlocking {
-            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, produsent)
+            val beskjedList = beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, systembruker)
             val beskjedDTO = beskjedList.first()
             beskjedDTO.tekst `should be equal to` beskjed.tekst
             beskjedDTO.link `should be equal to` beskjed.link
@@ -74,8 +74,8 @@ class BeskjedServiceTest {
 
     @Test
     fun `should throw exception if fetching events fails`() {
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } throws Exception("error")
-        invoking { runBlocking { beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, produsent) } } `should throw` ConsumeEventException::class
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } throws Exception("error")
+        invoking { runBlocking { beskjedService.getBeskjedEvents(innloggetBruker, grupperingsid, systembruker) } } `should throw` ConsumeEventException::class
     }
 
 }

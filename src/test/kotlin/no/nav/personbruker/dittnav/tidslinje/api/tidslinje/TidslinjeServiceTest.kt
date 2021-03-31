@@ -27,16 +27,16 @@ class TidslinjeServiceTest {
     private val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     private val tidslinjeService = TidslinjeService(statusoppdateringService, beskjedService, oppgaveService, innboksService)
     private val grupperingsid = "Dok123"
-    private val produsent = "dittnav"
+    private val systembruker = "dittnav"
 
     @Test
     fun `should throw exception if fetching events fail`() {
         coEvery {
-            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
         } throws Exception("error")
         invoking {
             runBlocking {
-                tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, produsent)
+                tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, systembruker)
             }
         } `should throw` ConsumeEventException::class
     }
@@ -48,13 +48,13 @@ class TidslinjeServiceTest {
         val innboks = createInnboks(eventId = "3", fodselsnummer = innloggetBruker.ident, aktiv = true)
         val statusoppdatering = createStatusoppdatering(eventId = "4", fodselsnummer = innloggetBruker.ident)
 
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgave)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjed)
-        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(innboks)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdatering)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgave)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjed)
+        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(innboks)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(statusoppdatering)
 
         runBlocking {
-            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, produsent)
+            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, systembruker)
             tidslinjeEvents.size `should be equal to` 4
         }
     }
@@ -63,13 +63,13 @@ class TidslinjeServiceTest {
     fun `should return empty list if no events match grupperingsid`() {
         val noMatchGrupperingsid = "dummyId"
 
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, produsent) } returns emptyList()
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, produsent) } returns emptyList()
-        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, produsent) } returns emptyList()
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, produsent) } returns emptyList()
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, systembruker) } returns emptyList()
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, systembruker) } returns emptyList()
+        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, systembruker) } returns emptyList()
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, noMatchGrupperingsid, systembruker) } returns emptyList()
 
         runBlocking {
-            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, noMatchGrupperingsid, produsent)
+            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, noMatchGrupperingsid, systembruker)
             tidslinjeEvents.`should be empty`()
         }
     }
@@ -86,13 +86,13 @@ class TidslinjeServiceTest {
         val statusoppdateringThreeDaysAgo = createStatusoppdateringWithEventTidspunkt(eventId = "4", eventTidspunkt = threeDaysAgo)
         val oppgaveFourDaysAgo = createOppgaveWithEventTidspunkt(eventId = "1", eventTidspunkt = fourDaysAgo)
 
-        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(oppgaveFourDaysAgo)
-        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(beskjedTwoDaysAgo)
-        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(innboksOneDayAgo)
-        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) } returns listOf(statusoppdateringThreeDaysAgo)
+        coEvery { oppgaveConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(oppgaveFourDaysAgo)
+        coEvery { beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(beskjedTwoDaysAgo)
+        coEvery { innboksConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(innboksOneDayAgo)
+        coEvery { statusoppdateringConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) } returns listOf(statusoppdateringThreeDaysAgo)
 
         runBlocking {
-            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, produsent)
+            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsid, systembruker)
             tidslinjeEvents.size `should be equal to` 4
 
             tidslinjeEvents[0].shouldBeInstanceOf<InnboksDTO>()

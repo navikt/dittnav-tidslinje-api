@@ -1,5 +1,6 @@
 package no.nav.personbruker.dittnav.tidslinje.api.tidslinje
 
+import systembrukerHeader
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -17,8 +18,8 @@ fun Route.tidslinje(tidslinjeService: TidslinjeService) {
     get("/tidslinje") {
         try {
             val grupperingsId = validateNonNullFieldMaxLength(call.request.queryParameters["grupperingsid"], "grupperingsid", 100)
-            val produsent = validateNonNullFieldMaxLength(call.request.queryParameters["produsent"], "produsent", 100)
-            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsId, produsent)
+            val systembruker = validateNonNullFieldMaxLength(call.request.systembrukerHeader(), "systembruker", 100)
+            val tidslinjeEvents = tidslinjeService.getTidslinjeEvents(innloggetBruker, grupperingsId, systembruker)
             call.respond(HttpStatusCode.OK, tidslinjeEvents)
         } catch (exception: Exception) {
             respondWithError(call, log, exception)

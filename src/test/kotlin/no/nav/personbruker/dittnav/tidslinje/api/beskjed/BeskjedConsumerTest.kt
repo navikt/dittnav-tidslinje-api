@@ -18,7 +18,7 @@ class BeskjedConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
     val grupperingsid = "Dok123"
-    val produsent = "dittnav"
+    val systembruker = "dittnav"
 
     @Test
     fun `should call information endpoint on event handler`() {
@@ -37,7 +37,7 @@ class BeskjedConsumerTest {
         val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent) `should be equal to` emptyList()
+            beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker) `should be equal to` emptyList()
         }
     }
 
@@ -55,7 +55,7 @@ class BeskjedConsumerTest {
         val beskjedConsumer = BeskjedConsumer(client, URL("http://event-handler"))
 
         runBlocking {
-            val externalEvents = beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, produsent)
+            val externalEvents = beskjedConsumer.getExternalEvents(innloggetBruker, grupperingsid, systembruker)
             val event = externalEvents.first()
             externalEvents.size `should be equal to` 1
             event.tekst `should be equal to` beskjedObject.tekst
