@@ -10,12 +10,17 @@ suspend fun respondWithError(call: ApplicationCall, log: Logger, exception: Exce
     when(exception) {
         is ConsumeEventException -> {
             call.respond(HttpStatusCode.ServiceUnavailable)
-            val msg = "Klarte ikke hente eventer. Returnerer feilkode til frontend"
+            val msg = "Klarte ikke hente eventer. Returnerer feilkode til frontend."
             log.error(msg, exception)
         }
         is FieldValidationException -> {
             call.respond(HttpStatusCode.BadRequest)
-            val msg = "Klarte ikke hente eventer fordi vi fikk en valideringsfeil. Returnerer feilkode. {}"
+            val msg = "Klarte ikke hente eventer fordi vi fikk en valideringsfeil. Returnerer feilkode til frontend."
+            log.error(msg, exception)
+        }
+        is MissingHeaderException -> {
+            call.respond(HttpStatusCode.BadRequest)
+            val msg = "Manglet header. Returnerer feilkode til frontend."
             log.error(msg, exception)
         }
         else -> {
