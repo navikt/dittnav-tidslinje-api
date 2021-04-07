@@ -5,7 +5,12 @@ import java.net.URL
 data class Environment(
         val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/')),
         val corsAllowedOrigins: String = getEnvVar("CORS_ALLOWED_ORIGINS"),
-        val corsAllowedSchemes: String = getOptionalEnvVar("CORS_ALLOWED_SCHEMES", "https")
+        val corsAllowedSchemes: String = getOptionalEnvVar("CORS_ALLOWED_SCHEMES", "https"),
+        val issoJwksUrl: URL = URL(getEnvVar("ISSO_JWKS_URL")),
+        val issoIssuer: String = getEnvVar("ISSO_ISSUER"),
+        val issoAcceptedAudience: List<String> = getEnvVar("ISSO_ACCEPTED_AUDIENCE")
+            .split(",")
+            .map(String::trim)
 )
 
 fun getEnvVar(varName: String): String {

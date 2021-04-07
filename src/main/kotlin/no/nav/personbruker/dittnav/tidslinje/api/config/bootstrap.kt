@@ -2,6 +2,7 @@ package no.nav.personbruker.dittnav.tidslinje.api.config
 
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.client.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.features.*
@@ -26,6 +27,7 @@ import no.nav.personbruker.dittnav.tidslinje.api.statusoppdatering.Statusoppdate
 import no.nav.personbruker.dittnav.tidslinje.api.tidslinje.TidslinjeService
 import no.nav.personbruker.dittnav.tidslinje.api.tidslinje.tidslinje
 import no.nav.security.token.support.ktor.tokenValidationSupport
+import setupIssoAuthentication
 
 @KtorExperimentalAPI
 fun Application.mainModule() {
@@ -58,6 +60,9 @@ fun Application.mainModule() {
 
     install(Authentication) {
         tokenValidationSupport(config = config)
+        jwt {
+            setupIssoAuthentication(environment)
+        }
     }
 
     install(ContentNegotiation) {
