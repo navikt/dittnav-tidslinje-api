@@ -4,6 +4,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
+import no.nav.personbruker.dittnav.tidslinje.api.common.SystembrukerObjectMother
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should throw`
@@ -13,10 +14,10 @@ import org.junit.jupiter.api.Test
 class StatusoppdateringServiceTest {
 
     var innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val systembruker = SystembrukerObjectMother.createSystembruker()
     val statusoppdateringConsumer = mockk<StatusoppdateringConsumer>()
     val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     val grupperingsid = "Dok123"
-    val systembruker = "dittnav"
 
     @Test
     fun `should return list of statusoppdateringDTO when Events are received`() {

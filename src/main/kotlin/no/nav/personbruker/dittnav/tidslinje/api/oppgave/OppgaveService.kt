@@ -1,8 +1,8 @@
 package no.nav.personbruker.dittnav.tidslinje.api.oppgave
 
-import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 
 class OppgaveService(private val oppgaveConsumer: OppgaveConsumer) {
 

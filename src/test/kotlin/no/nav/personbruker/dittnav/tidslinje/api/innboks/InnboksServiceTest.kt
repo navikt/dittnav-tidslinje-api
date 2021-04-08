@@ -4,7 +4,9 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
+import no.nav.personbruker.dittnav.tidslinje.api.common.SystembrukerObjectMother
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
@@ -14,8 +16,8 @@ class InnboksServiceTest {
     val innboksConsumer = mockk<InnboksConsumer>()
     val innboksService = InnboksService(innboksConsumer)
     var innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val systembruker = SystembrukerObjectMother.createSystembruker()
     val grupperingsid = "Dok123"
-    val systembruker = "dittnav"
     val fodselsnummer = "1"
 
     @Test

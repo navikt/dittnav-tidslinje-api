@@ -1,12 +1,12 @@
 package no.nav.personbruker.dittnav.tidslinje.api.tidslinje
 
-import Systembruker
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedDTO
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
 import no.nav.personbruker.dittnav.tidslinje.api.brukernotifikasjon.BrukernotifikasjonDTO
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksDTO
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.InnboksService
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.OppgaveDTO

@@ -1,8 +1,8 @@
 package no.nav.personbruker.dittnav.tidslinje.api.innboks
 
-import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 
 class InnboksService(private val innboksConsumer: InnboksConsumer) {
 

@@ -1,8 +1,8 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
-import Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 
 class BeskjedService(private val beskjedConsumer: BeskjedConsumer) {
 

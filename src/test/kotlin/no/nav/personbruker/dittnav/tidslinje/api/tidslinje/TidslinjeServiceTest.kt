@@ -5,6 +5,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.*
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
+import no.nav.personbruker.dittnav.tidslinje.api.common.SystembrukerObjectMother
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.innboks.*
 import no.nav.personbruker.dittnav.tidslinje.api.oppgave.*
@@ -16,7 +17,8 @@ import java.time.ZonedDateTime
 
 class TidslinjeServiceTest {
 
-    private var innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    private val systembruker = SystembrukerObjectMother.createSystembruker()
     private val beskjedConsumer = mockk<BeskjedConsumer>()
     private val oppgaveConsumer = mockk<OppgaveConsumer>()
     private val innboksConsumer = mockk<InnboksConsumer>()
@@ -27,7 +29,6 @@ class TidslinjeServiceTest {
     private val statusoppdateringService = StatusoppdateringService(statusoppdateringConsumer)
     private val tidslinjeService = TidslinjeService(statusoppdateringService, beskjedService, oppgaveService, innboksService)
     private val grupperingsid = "Dok123"
-    private val systembruker = "dittnav"
 
     @Test
     fun `should throw exception if fetching events fail`() {

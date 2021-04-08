@@ -5,6 +5,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.dittnav.tidslinje.api.common.exception.ConsumeEventException
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
+import no.nav.personbruker.dittnav.tidslinje.api.common.SystembrukerObjectMother
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
@@ -15,8 +16,8 @@ class OppgaveServiceTest {
     val oppgaveConsumer = mockk<OppgaveConsumer>()
     val oppgaveService = OppgaveService(oppgaveConsumer)
     var innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val systembruker = SystembrukerObjectMother.createSystembruker()
     val grupperingsid = "Dok123"
-    val systembruker = "dittnav"
     val fodselsnummer = "1"
 
     @Test

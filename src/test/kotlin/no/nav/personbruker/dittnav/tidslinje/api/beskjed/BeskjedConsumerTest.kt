@@ -8,6 +8,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBrukerObjectMother
+import no.nav.personbruker.dittnav.tidslinje.api.common.SystembrukerObjectMother
 import no.nav.personbruker.dittnav.tidslinje.api.config.json
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be true`
@@ -17,8 +18,8 @@ import java.net.URL
 class BeskjedConsumerTest {
 
     val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker()
+    val systembruker = SystembrukerObjectMother.createSystembruker()
     val grupperingsid = "Dok123"
-    val systembruker = "dittnav"
 
     @Test
     fun `should call information endpoint on event handler`() {

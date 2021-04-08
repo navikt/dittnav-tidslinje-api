@@ -1,7 +1,5 @@
 package no.nav.personbruker.dittnav.tidslinje.api.config
 
-import SYSTEMBRUKER_HEADER_NAME
-import Systembruker
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -27,7 +25,7 @@ suspend inline fun <reified T> HttpClient.getWithParameter(url: URL,
         url(url)
         method = HttpMethod.Get
         header(HttpHeaders.Authorization, innloggetBruker.createAuthenticationHeader())
-        header(SYSTEMBRUKER_HEADER_NAME, "Bearer $systembruker")
+        header("systembruker", "Bearer $systembruker")
         parameter("grupperingsid", grupperingsId)
     }
 }

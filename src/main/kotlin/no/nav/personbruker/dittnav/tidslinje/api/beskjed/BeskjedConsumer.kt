@@ -1,8 +1,8 @@
 package no.nav.personbruker.dittnav.tidslinje.api.beskjed
 
-import Systembruker
 import io.ktor.client.HttpClient
 import no.nav.personbruker.dittnav.tidslinje.api.common.InnloggetBruker
+import no.nav.personbruker.dittnav.tidslinje.api.config.Systembruker
 import no.nav.personbruker.dittnav.tidslinje.api.config.getWithParameter
 import java.net.URL
 
