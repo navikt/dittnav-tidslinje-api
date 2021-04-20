@@ -34,6 +34,7 @@ fun Application.mainModule() {
     val environment = Environment()
 
     DefaultExports.initialize()
+    SystemuserValidation.initSystemuserValidation(environment)
 
     val httpClient = HttpClientBuilder.build(KotlinxSerializer(json()))
 
@@ -48,6 +49,7 @@ fun Application.mainModule() {
     val innboksService = InnboksService(innboksConsumer)
     val tidslinjeService = TidslinjeService(statusoppdateringService, beskjedService, oppgaveService, innboksService)
 
+
     install(DefaultHeaders)
 
     install(CORS) {
@@ -60,9 +62,6 @@ fun Application.mainModule() {
 
     install(Authentication) {
         tokenValidationSupport(config = config)
-        jwt {
-            setupIssoAuthentication(environment)
-        }
     }
 
     install(ContentNegotiation) {
@@ -75,7 +74,6 @@ fun Application.mainModule() {
             tidslinje(tidslinjeService)
             authenticationCheck()
         }
-
         configureShutdownHook(httpClient)
     }
 }
