@@ -24,9 +24,7 @@ spec:
     max: 4
   webproxy: true
   ingresses:
-{{#each ingresses}}
-  - "{{this}}"
-{{/each}}
+    - "https://app-q1.adeo.no/dittnav-eventer-modia"
   vault:
     enabled: true
   resources:
