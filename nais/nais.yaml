@@ -24,7 +24,7 @@ spec:
     max: 4
   webproxy: true
   ingresses:
-    - "https://app-q1.adeo.no/dittnav-eventer-modia"
+    - "https://app-q1.adeo.no/dittnav-tidslinje-api"
   vault:
     enabled: true
   resources:
