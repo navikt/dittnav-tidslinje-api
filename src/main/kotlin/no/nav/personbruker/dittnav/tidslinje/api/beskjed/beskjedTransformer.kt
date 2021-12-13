@@ -20,4 +20,3 @@ fun toMaskedBeskjedDTO(beskjed: Beskjed): BeskjedDTO =
             val maskedBeskjedDTO = toBeskjedDTO(beskjed)
             return maskedBeskjedDTO.copy(tekst = "***", link = "***", produsent = "***")
         }
-
