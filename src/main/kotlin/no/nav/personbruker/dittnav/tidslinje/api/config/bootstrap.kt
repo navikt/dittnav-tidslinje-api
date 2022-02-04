@@ -1,15 +1,18 @@
 package no.nav.personbruker.dittnav.tidslinje.api.config
 
 import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.client.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
-import io.ktor.util.*
-import io.ktor.util.pipeline.*
+import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
+import io.ktor.client.HttpClient
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.features.CORS
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.http.HttpHeaders
+import io.ktor.routing.routing
+import io.ktor.serialization.json
+import io.ktor.util.pipeline.PipelineContext
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedConsumer
 import no.nav.personbruker.dittnav.tidslinje.api.beskjed.BeskjedService
@@ -27,7 +30,6 @@ import no.nav.personbruker.dittnav.tidslinje.api.tidslinje.TidslinjeService
 import no.nav.personbruker.dittnav.tidslinje.api.tidslinje.tidslinje
 import no.nav.security.token.support.ktor.tokenValidationSupport
 
-@KtorExperimentalAPI
 fun Application.mainModule() {
     val environment = Environment()
 
